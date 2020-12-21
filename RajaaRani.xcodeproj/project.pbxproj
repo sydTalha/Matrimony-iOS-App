@@ -3,27 +3,59 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		321DCAFEB01998728F996044 /* Pods_RajaaRani.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0100B7E4B052E4CF0F347257 /* Pods_RajaaRani.framework */; };
+		65123BA6258BA56600DB8C9D /* EmailVerifyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */; };
+		65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */; };
+		654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654CD62E2590C838001B0581 /* ProfileDetailView.swift */; };
+		6568CCBC258755B00052DA6B /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6568CCBB258755B00052DA6B /* LoginVC.swift */; };
+		6568CCC2258771030052DA6B /* intro.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6568CCC0258770D90052DA6B /* intro.mp4 */; };
+		6568CCC52587D3320052DA6B /* EmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6568CCC42587D3320052DA6B /* EmailVC.swift */; };
 		657A24D225865E65007C9B50 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A24D125865E65007C9B50 /* AppDelegate.swift */; };
-		657A24D425865E65007C9B50 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A24D325865E65007C9B50 /* SceneDelegate.swift */; };
-		657A24D625865E65007C9B50 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 657A24D525865E65007C9B50 /* ViewController.swift */; };
 		657A24D925865E65007C9B50 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657A24D725865E65007C9B50 /* Main.storyboard */; };
 		657A24DB25865E66007C9B50 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 657A24DA25865E66007C9B50 /* Assets.xcassets */; };
 		657A24DE25865E66007C9B50 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 657A24DC25865E66007C9B50 /* LaunchScreen.storyboard */; };
+		6583A603258CCDCA00C0DE6B /* HomeVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583A602258CCDCA00C0DE6B /* HomeVC.swift */; };
+		6583A606258CCDDB00C0DE6B /* MatchesVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583A605258CCDDB00C0DE6B /* MatchesVC.swift */; };
+		6583A609258CCDE800C0DE6B /* ChatsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583A608258CCDE800C0DE6B /* ChatsVC.swift */; };
+		6583A60C258CCDF400C0DE6B /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6583A60B258CCDF400C0DE6B /* SettingsVC.swift */; };
+		65895F73258A069E0054EDCC /* BirthdaySelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65895F72258A069E0054EDCC /* BirthdaySelectionVC.swift */; };
+		659219F22590AAD90071E0B5 /* ProfileDetails.xib in Resources */ = {isa = PBXBuildFile; fileRef = 659219F12590AAD90071E0B5 /* ProfileDetails.xib */; };
+		65A1E1F92588A6C700A028E6 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1E1F82588A6C700A028E6 /* Extensions.swift */; };
+		65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */; };
+		65A1E2092588F99F00A028E6 /* ProfileVerification.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65A1E2082588F99F00A028E6 /* ProfileVerification.storyboard */; };
+		65A1E20E25890DE400A028E6 /* GenderSelectionVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A1E20D25890DE400A028E6 /* GenderSelectionVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0100B7E4B052E4CF0F347257 /* Pods_RajaaRani.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RajaaRani.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerifyVC.swift; sourceTree = "<group>"; };
+		65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Dashboard.storyboard; sourceTree = "<group>"; };
+		654CD62E2590C838001B0581 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
+		6568CCBB258755B00052DA6B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
+		6568CCC0258770D90052DA6B /* intro.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = intro.mp4; sourceTree = "<group>"; };
+		6568CCC42587D3320052DA6B /* EmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVC.swift; sourceTree = "<group>"; };
 		657A24CE25865E65007C9B50 /* RajaaRani.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RajaaRani.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		657A24D125865E65007C9B50 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		657A24D325865E65007C9B50 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		657A24D525865E65007C9B50 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		657A24D825865E65007C9B50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		657A24DA25865E66007C9B50 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		657A24DD25865E66007C9B50 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		657A24DF25865E66007C9B50 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6583A602258CCDCA00C0DE6B /* HomeVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeVC.swift; sourceTree = "<group>"; };
+		6583A605258CCDDB00C0DE6B /* MatchesVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MatchesVC.swift; sourceTree = "<group>"; };
+		6583A608258CCDE800C0DE6B /* ChatsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatsVC.swift; sourceTree = "<group>"; };
+		6583A60B258CCDF400C0DE6B /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
+		65895F72258A069E0054EDCC /* BirthdaySelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BirthdaySelectionVC.swift; sourceTree = "<group>"; };
+		659219F12590AAD90071E0B5 /* ProfileDetails.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileDetails.xib; sourceTree = "<group>"; };
+		65A1E1F82588A6C700A028E6 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkMonitor.swift; sourceTree = "<group>"; };
+		65A1E2082588F99F00A028E6 /* ProfileVerification.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ProfileVerification.storyboard; sourceTree = "<group>"; };
+		65A1E20D25890DE400A028E6 /* GenderSelectionVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenderSelectionVC.swift; sourceTree = "<group>"; };
+		845866F6891F120369F0B68D /* Pods-RajaaRani.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.debug.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.debug.xcconfig"; sourceTree = "<group>"; };
+		B4C3E1CDF18CFDF5A9EEAADD /* Pods-RajaaRani.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.release.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +63,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				321DCAFEB01998728F996044 /* Pods_RajaaRani.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +75,8 @@
 			children = (
 				657A24D025865E65007C9B50 /* RajaaRani */,
 				657A24CF25865E65007C9B50 /* Products */,
+				ACB971967372A3494DAE8F0A /* Pods */,
+				B6497116DA4DD8856003CE15 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -57,14 +92,109 @@
 			isa = PBXGroup;
 			children = (
 				657A24D125865E65007C9B50 /* AppDelegate.swift */,
-				657A24D325865E65007C9B50 /* SceneDelegate.swift */,
-				657A24D525865E65007C9B50 /* ViewController.swift */,
-				657A24D725865E65007C9B50 /* Main.storyboard */,
+				657A24EB25867760007C9B50 /* helpers */,
+				657A24E82586773F007C9B50 /* models */,
+				657A24E92586774D007C9B50 /* controllers */,
+				657A24EA25867754007C9B50 /* views */,
 				657A24DA25865E66007C9B50 /* Assets.xcassets */,
-				657A24DC25865E66007C9B50 /* LaunchScreen.storyboard */,
 				657A24DF25865E66007C9B50 /* Info.plist */,
+				6568CCC0258770D90052DA6B /* intro.mp4 */,
 			);
 			path = RajaaRani;
+			sourceTree = "<group>";
+		};
+		657A24E82586773F007C9B50 /* models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = models;
+			sourceTree = "<group>";
+		};
+		657A24E92586774D007C9B50 /* controllers */ = {
+			isa = PBXGroup;
+			children = (
+				6583A5FF258CCD8100C0DE6B /* Startup */,
+				6583A600258CCD9800C0DE6B /* ProfileVerify */,
+				6583A601258CCDAC00C0DE6B /* Dashboard */,
+			);
+			path = controllers;
+			sourceTree = "<group>";
+		};
+		657A24EA25867754007C9B50 /* views */ = {
+			isa = PBXGroup;
+			children = (
+				657A24D725865E65007C9B50 /* Main.storyboard */,
+				657A24DC25865E66007C9B50 /* LaunchScreen.storyboard */,
+				65A1E2082588F99F00A028E6 /* ProfileVerification.storyboard */,
+				65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */,
+			);
+			path = views;
+			sourceTree = "<group>";
+		};
+		657A24EB25867760007C9B50 /* helpers */ = {
+			isa = PBXGroup;
+			children = (
+				65A1E1F82588A6C700A028E6 /* Extensions.swift */,
+				65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */,
+			);
+			path = helpers;
+			sourceTree = "<group>";
+		};
+		6583A5FF258CCD8100C0DE6B /* Startup */ = {
+			isa = PBXGroup;
+			children = (
+				6568CCBB258755B00052DA6B /* LoginVC.swift */,
+				6568CCC42587D3320052DA6B /* EmailVC.swift */,
+			);
+			path = Startup;
+			sourceTree = "<group>";
+		};
+		6583A600258CCD9800C0DE6B /* ProfileVerify */ = {
+			isa = PBXGroup;
+			children = (
+				65A1E20D25890DE400A028E6 /* GenderSelectionVC.swift */,
+				65895F72258A069E0054EDCC /* BirthdaySelectionVC.swift */,
+				65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */,
+			);
+			path = ProfileVerify;
+			sourceTree = "<group>";
+		};
+		6583A601258CCDAC00C0DE6B /* Dashboard */ = {
+			isa = PBXGroup;
+			children = (
+				659219F02590AAA80071E0B5 /* DetailsView */,
+				6583A602258CCDCA00C0DE6B /* HomeVC.swift */,
+				6583A605258CCDDB00C0DE6B /* MatchesVC.swift */,
+				6583A608258CCDE800C0DE6B /* ChatsVC.swift */,
+				6583A60B258CCDF400C0DE6B /* SettingsVC.swift */,
+			);
+			path = Dashboard;
+			sourceTree = "<group>";
+		};
+		659219F02590AAA80071E0B5 /* DetailsView */ = {
+			isa = PBXGroup;
+			children = (
+				659219F12590AAD90071E0B5 /* ProfileDetails.xib */,
+				654CD62E2590C838001B0581 /* ProfileDetailView.swift */,
+			);
+			path = DetailsView;
+			sourceTree = "<group>";
+		};
+		ACB971967372A3494DAE8F0A /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				845866F6891F120369F0B68D /* Pods-RajaaRani.debug.xcconfig */,
+				B4C3E1CDF18CFDF5A9EEAADD /* Pods-RajaaRani.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		B6497116DA4DD8856003CE15 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0100B7E4B052E4CF0F347257 /* Pods_RajaaRani.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +204,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 657A24E225865E66007C9B50 /* Build configuration list for PBXNativeTarget "RajaaRani" */;
 			buildPhases = (
+				24AFFCC3FA9D4CD13A262246 /* [CP] Check Pods Manifest.lock */,
 				657A24CA25865E65007C9B50 /* Sources */,
 				657A24CB25865E65007C9B50 /* Frameworks */,
 				657A24CC25865E65007C9B50 /* Resources */,
+				2CCF04E46B3A8F3A08AB7646 /* [CP] Embed Pods Frameworks */,
+				3E380F74A4C5EC86842E52AB /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -124,6 +257,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				659219F22590AAD90071E0B5 /* ProfileDetails.xib in Resources */,
+				6568CCC2258771030052DA6B /* intro.mp4 in Resources */,
+				65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */,
+				65A1E2092588F99F00A028E6 /* ProfileVerification.storyboard in Resources */,
 				657A24DE25865E66007C9B50 /* LaunchScreen.storyboard in Resources */,
 				657A24DB25865E66007C9B50 /* Assets.xcassets in Resources */,
 				657A24D925865E65007C9B50 /* Main.storyboard in Resources */,
@@ -132,14 +269,83 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		24AFFCC3FA9D4CD13A262246 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-RajaaRani-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2CCF04E46B3A8F3A08AB7646 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3E380F74A4C5EC86842E52AB /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		657A24CA25865E65007C9B50 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				657A24D625865E65007C9B50 /* ViewController.swift in Sources */,
+				6583A606258CCDDB00C0DE6B /* MatchesVC.swift in Sources */,
+				6568CCC52587D3320052DA6B /* EmailVC.swift in Sources */,
+				6568CCBC258755B00052DA6B /* LoginVC.swift in Sources */,
+				65895F73258A069E0054EDCC /* BirthdaySelectionVC.swift in Sources */,
+				6583A603258CCDCA00C0DE6B /* HomeVC.swift in Sources */,
+				6583A60C258CCDF400C0DE6B /* SettingsVC.swift in Sources */,
+				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
+				65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */,
+				65123BA6258BA56600DB8C9D /* EmailVerifyVC.swift in Sources */,
 				657A24D225865E65007C9B50 /* AppDelegate.swift in Sources */,
-				657A24D425865E65007C9B50 /* SceneDelegate.swift in Sources */,
+				65A1E20E25890DE400A028E6 /* GenderSelectionVC.swift in Sources */,
+				65A1E1F92588A6C700A028E6 /* Extensions.swift in Sources */,
+				6583A609258CCDE800C0DE6B /* ChatsVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -283,9 +489,11 @@
 		};
 		657A24E325865E66007C9B50 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 845866F6891F120369F0B68D /* Pods-RajaaRani.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LFD3T7L2TV;
 				INFOPLIST_FILE = RajaaRani/Info.plist;
@@ -295,6 +503,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.iumarketing.RajaaRani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -302,9 +511,11 @@
 		};
 		657A24E425865E66007C9B50 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4C3E1CDF18CFDF5A9EEAADD /* Pods-RajaaRani.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = LFD3T7L2TV;
 				INFOPLIST_FILE = RajaaRani/Info.plist;
@@ -314,6 +525,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.iumarketing.RajaaRani;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
