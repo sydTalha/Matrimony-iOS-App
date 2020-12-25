@@ -11,6 +11,8 @@
 		65123BA6258BA56600DB8C9D /* EmailVerifyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */; };
 		65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */; };
 		654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654CD62E2590C838001B0581 /* ProfileDetailView.swift */; };
+		65533E5825949F1B0058F941 /* ProfileCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65533E5725949F1B0058F941 /* ProfileCardView.xib */; };
+		65533E5B25949F4D0058F941 /* ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65533E5A25949F4D0058F941 /* ProfileCard.swift */; };
 		6568CCBC258755B00052DA6B /* LoginVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6568CCBB258755B00052DA6B /* LoginVC.swift */; };
 		6568CCC2258771030052DA6B /* intro.mp4 in Resources */ = {isa = PBXBuildFile; fileRef = 6568CCC0258770D90052DA6B /* intro.mp4 */; };
 		6568CCC52587D3320052DA6B /* EmailVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6568CCC42587D3320052DA6B /* EmailVC.swift */; };
@@ -35,6 +37,8 @@
 		65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerifyVC.swift; sourceTree = "<group>"; };
 		65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Dashboard.storyboard; sourceTree = "<group>"; };
 		654CD62E2590C838001B0581 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
+		65533E5725949F1B0058F941 /* ProfileCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCardView.xib; sourceTree = "<group>"; };
+		65533E5A25949F4D0058F941 /* ProfileCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCard.swift; sourceTree = "<group>"; };
 		6568CCBB258755B00052DA6B /* LoginVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginVC.swift; sourceTree = "<group>"; };
 		6568CCC0258770D90052DA6B /* intro.mp4 */ = {isa = PBXFileReference; lastKnownFileType = file; path = intro.mp4; sourceTree = "<group>"; };
 		6568CCC42587D3320052DA6B /* EmailVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVC.swift; sourceTree = "<group>"; };
@@ -162,6 +166,7 @@
 		6583A601258CCDAC00C0DE6B /* Dashboard */ = {
 			isa = PBXGroup;
 			children = (
+				65B7A8732593319600230BEA /* CardView */,
 				659219F02590AAA80071E0B5 /* DetailsView */,
 				6583A602258CCDCA00C0DE6B /* HomeVC.swift */,
 				6583A605258CCDDB00C0DE6B /* MatchesVC.swift */,
@@ -178,6 +183,15 @@
 				654CD62E2590C838001B0581 /* ProfileDetailView.swift */,
 			);
 			path = DetailsView;
+			sourceTree = "<group>";
+		};
+		65B7A8732593319600230BEA /* CardView */ = {
+			isa = PBXGroup;
+			children = (
+				65533E5A25949F4D0058F941 /* ProfileCard.swift */,
+				65533E5725949F1B0058F941 /* ProfileCardView.xib */,
+			);
+			path = CardView;
 			sourceTree = "<group>";
 		};
 		ACB971967372A3494DAE8F0A /* Pods */ = {
@@ -261,6 +275,7 @@
 				6568CCC2258771030052DA6B /* intro.mp4 in Resources */,
 				65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */,
 				65A1E2092588F99F00A028E6 /* ProfileVerification.storyboard in Resources */,
+				65533E5825949F1B0058F941 /* ProfileCardView.xib in Resources */,
 				657A24DE25865E66007C9B50 /* LaunchScreen.storyboard in Resources */,
 				657A24DB25865E66007C9B50 /* Assets.xcassets in Resources */,
 				657A24D925865E65007C9B50 /* Main.storyboard in Resources */,
@@ -338,6 +353,7 @@
 				6568CCBC258755B00052DA6B /* LoginVC.swift in Sources */,
 				65895F73258A069E0054EDCC /* BirthdaySelectionVC.swift in Sources */,
 				6583A603258CCDCA00C0DE6B /* HomeVC.swift in Sources */,
+				65533E5B25949F4D0058F941 /* ProfileCard.swift in Sources */,
 				6583A60C258CCDF400C0DE6B /* SettingsVC.swift in Sources */,
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
 				65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */,
