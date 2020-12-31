@@ -90,6 +90,14 @@ extension UIViewController{
     }
 }
 
+//MARK:- UINavigationController
+extension UINavigationController{
+    override public func viewDidLoad() {
+            super.viewDidLoad()
+            interactivePopGestureRecognizer?.delegate = nil
+        }
+}
+
 
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="fvO-bc-1Ah">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Ij7-eQ-zrW">
     <device id="retina4_0" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
@@ -37,6 +37,9 @@
                                     <constraint firstAttribute="width" constant="30" id="Eo7-5B-Q9t"/>
                                     <constraint firstAttribute="height" constant="30" id="Wu5-uM-I7G"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="backBtnTapped:" destination="fvO-bc-1Ah" eventType="touchUpInside" id="b7P-Q3-QUG"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="G3i-i1-XKU">
                                 <rect key="frame" x="278" y="40" width="30" height="30"/>
@@ -202,7 +205,9 @@
                             <constraint firstItem="p2G-mh-FvB" firstAttribute="trailing" secondItem="CLN-lv-iGL" secondAttribute="trailing" constant="20" id="zLv-de-F9A"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="ZH3-vM-AmY"/>
                     <connections>
+                        <outlet property="emailTitle_lbl" destination="ziP-KO-APs" id="sxp-vb-91L"/>
                         <outlet property="femaleOpt_view" destination="t1v-vW-XCh" id="UA3-sb-eHo"/>
                         <outlet property="maleOpt_view" destination="7gG-cQ-ppT" id="gFO-Ju-Cou"/>
                         <segue destination="p9I-6a-XLG" kind="show" identifier="goToDob" id="Bw3-pp-i1n"/>
@@ -210,14 +215,14 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o2Z-A9-B6G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-64.799999999999997" y="149.77511244377811"/>
+            <point key="canvasLocation" x="931.875" y="148.94366197183098"/>
         </scene>
         <!--Birthday SelectionVC-->
         <scene sceneID="oHs-cU-HaM">
             <objects>
                 <viewController id="p9I-6a-XLG" customClass="BirthdaySelectionVC" customModule="RajaaRani" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8vN-n8-MRv">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="back-arrow-gray" translatesAutoresizingMaskIntoConstraints="NO" id="Afg-ls-AEt">
@@ -240,6 +245,9 @@
                                     <constraint firstAttribute="width" constant="30" id="7Td-rg-AS1"/>
                                     <constraint firstAttribute="height" constant="30" id="QO6-T7-Dnd"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="backBtnTapped:" destination="p9I-6a-XLG" eventType="touchUpInside" id="pbn-bF-usR"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bb0-aL-Ylg">
                                 <rect key="frame" x="278" y="40" width="30" height="30"/>
@@ -305,9 +313,12 @@
                                     <constraint firstAttribute="height" constant="58" id="UiN-du-bV3"/>
                                     <constraint firstAttribute="width" constant="134" id="hoy-vD-Sbo"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="dateChanged:" destination="p9I-6a-XLG" eventType="valueChanged" id="fLa-Jq-dNg"/>
+                                </connections>
                             </datePicker>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="iUh-YX-sRd">
-                                <rect key="frame" x="16" y="428" width="288" height="120"/>
+                                <rect key="frame" x="16" y="448" width="288" height="120"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qya-gh-tAy">
                                         <rect key="frame" x="20" y="31.5" width="248" height="47"/>
@@ -374,19 +385,21 @@
                     <connections>
                         <outlet property="bottomCard_view" destination="iUh-YX-sRd" id="j7k-Wx-sYZ"/>
                         <outlet property="cardView_heightConstraint" destination="XIb-tc-8He" id="rrB-FZ-2JW"/>
+                        <outlet property="datePicker" destination="Yx3-4Q-e0x" id="bOK-1k-6fF"/>
+                        <outlet property="emailTitle_lbl" destination="728-JG-MyH" id="WaI-RJ-9R2"/>
                         <segue destination="Ed3-ou-7wN" kind="show" identifier="goToEmailVerify" id="0iD-AN-Rrd"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="c7e-BC-4ga" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="791.25" y="148.94366197183098"/>
+            <point key="canvasLocation" x="1788.75" y="148.94366197183098"/>
         </scene>
         <!--Email VerifyVC-->
         <scene sceneID="pcN-ii-36g">
             <objects>
                 <viewController id="Ed3-ou-7wN" customClass="EmailVerifyVC" customModule="RajaaRani" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ohx-be-hKc">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="548"/>
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="back-arrow-gray" translatesAutoresizingMaskIntoConstraints="NO" id="3Uv-Ws-bdd">
@@ -409,6 +422,9 @@
                                     <constraint firstAttribute="height" constant="30" id="XFf-tG-Yjm"/>
                                     <constraint firstAttribute="width" constant="30" id="fD7-4s-eRq"/>
                                 </constraints>
+                                <connections>
+                                    <action selector="backBtnTapped:" destination="Ed3-ou-7wN" eventType="touchUpInside" id="dLE-rv-fyq"/>
+                                </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4uf-Q7-Q8C">
                                 <rect key="frame" x="278" y="40" width="30" height="30"/>
@@ -443,13 +459,13 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Enter your Email Verification Code" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GGd-Ak-HDi">
-                                <rect key="frame" x="8" y="243" width="304" height="48"/>
+                                <rect key="frame" x="8" y="253" width="304" height="48"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sent to" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="i3c-fK-fgq">
-                                <rect key="frame" x="96" y="299" width="44" height="16"/>
+                                <rect key="frame" x="96" y="309" width="44" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="44" id="ep2-Ie-0zR"/>
                                     <constraint firstAttribute="height" constant="16" id="t5r-lN-bW9"/>
@@ -459,7 +475,7 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="user@gmail.com" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4ZA-9n-F6f">
-                                <rect key="frame" x="144" y="299" width="164" height="16"/>
+                                <rect key="frame" x="144" y="309" width="164" height="16"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="16" id="aze-ab-yeM"/>
                                 </constraints>
@@ -468,14 +484,14 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="N6K-RL-cAu" customClass="OTPFieldView" customModule="OTPFieldView">
-                                <rect key="frame" x="20" y="338" width="280" height="94"/>
+                                <rect key="frame" x="20" y="348" width="280" height="94"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="94" id="J0t-0R-vUG"/>
                                 </constraints>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nPC-0Q-ukR">
-                                <rect key="frame" x="20" y="439" width="280" height="30"/>
+                                <rect key="frame" x="20" y="449" width="280" height="30"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="30" id="xiQ-dh-cby"/>
                                 </constraints>
@@ -523,13 +539,14 @@
                     </view>
                     <navigationItem key="navigationItem" id="5Nu-H8-zWr"/>
                     <connections>
+                        <outlet property="emailTitle_lbl" destination="4ZA-9n-F6f" id="6a8-IN-3k1"/>
                         <outlet property="otpView" destination="N6K-RL-cAu" id="MDT-1y-fuR"/>
                         <segue destination="4dz-Sj-P0h" kind="presentation" identifier="goToDashboard" modalPresentationStyle="fullScreen" id="2L4-C7-a8M"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lbl-OY-sFm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1627.5" y="148.94366197183098"/>
+            <point key="canvasLocation" x="2625" y="148.94366197183098"/>
         </scene>
         <!--dashboard_tab-->
         <scene sceneID="YNJ-xK-Zhn">
@@ -537,7 +554,24 @@
                 <viewControllerPlaceholder storyboardName="Dashboard" referencedIdentifier="dashboard_tab" id="4dz-Sj-P0h" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qgd-Cl-4hP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2239" y="160"/>
+            <point key="canvasLocation" x="3243.75" y="148.94366197183098"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="dHm-CI-w1p">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" navigationBarHidden="YES" id="Ij7-eQ-zrW" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="xgR-jg-21e">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="fvO-bc-1Ah" kind="relationship" relationship="rootViewController" id="aNd-Jt-Vpg"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="0Pi-eS-ZaQ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-65.625" y="148.94366197183098"/>
         </scene>
     </scenes>
     <resources>

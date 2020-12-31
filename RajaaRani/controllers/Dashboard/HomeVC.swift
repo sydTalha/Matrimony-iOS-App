@@ -6,8 +6,6 @@
 //
 
 import UIKit
-import DMSwipeCards
-import ZLSwipeableViewSwift
 import Koloda
 
 class HomeVC: UIViewController {
@@ -16,6 +14,7 @@ class HomeVC: UIViewController {
     
     var cardExpanded = false
     var count = 0
+    var user: User?
     
     //MARK:- Outlets
     @IBOutlet weak var cardStack_main: KolodaView!

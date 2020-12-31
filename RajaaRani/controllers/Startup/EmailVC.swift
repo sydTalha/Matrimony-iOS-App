@@ -14,6 +14,7 @@ class EmailVC: UIViewController {
     var playerLayer: AVPlayerLayer?
     var queuePlayer: AVQueuePlayer?
     var looper: AVPlayerLooper?
+    var user: User?
     
     //MARK:- Outlets
     @IBOutlet weak var report_view: UIView!
@@ -33,6 +34,7 @@ class EmailVC: UIViewController {
     
     @IBOutlet weak var backBtn: UIButton!
     
+    @IBOutlet weak var emailTxtField: UITextField!
     
     //MARK:- Constraints Outlets
     
@@ -41,13 +43,34 @@ class EmailVC: UIViewController {
 
     @IBAction func backBtnTapped(_ sender: UIButton) {
         
-        self.dismiss(animated: true, completion: nil)
+        self.navigationController?.popViewController(animated: true)
     }
     
     
     @IBAction func submitTapped(_ sender: Any) {
         
-        performSegue(withIdentifier: "goToVerify", sender: self)
+        
+        if(emailTxtField.text?.isEmpty ?? true){
+            let alert = UIAlertController(title: "Empty Field", message: "Please enter a valid email address", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+        else{
+            let emailText = emailTxtField.text!
+            if (self.isValidEmail(emailText)){
+                
+                //valid email
+                
+                self.user?.email = emailText
+                performSegue(withIdentifier: "goToVerify", sender: self)
+            }
+            else{
+                let alert = UIAlertController(title: "Invalid Email", message: "Please enter a valid email address", preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+            }
+        }
+        
         
     }
     
@@ -55,6 +78,19 @@ class EmailVC: UIViewController {
 
 }
 
+
+//MARK:- Event Handlers
+extension EmailVC{
+    
+    @objc func keyboardWillShow(sender: NSNotification) {
+         self.view.frame.origin.y = -180 // Move view 150 points upward
+    }
+
+    @objc func keyboardWillHide(sender: NSNotification) {
+         self.view.frame.origin.y = 0 // Move view to original position
+    }
+    
+}
 
 //MARK:- Lifecycle
 extension EmailVC{
@@ -62,7 +98,17 @@ extension EmailVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
+        
+        user = User(email: "", DOB: "", gender: "")
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToVerify"{
+            let destVC = segue.destination as! GenderSelectionVC
+            destVC.user = self.user
+        }
+    }
+    
 }
 
 
@@ -70,10 +116,19 @@ extension EmailVC{
 extension EmailVC{
 
     func setupInterface(){
+        self.hideKeyboardWhenTappedAround()
+        
         report_view.layer.cornerRadius = report_view.frame.size.width/2
         report_view.clipsToBounds = true
         
         playVideo()
+        
+        
+        //Keyboard notifications
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: UIResponder.keyboardWillHideNotification, object: nil)
+        
     }
     
     
@@ -111,4 +166,12 @@ extension EmailVC{
         allViewsToFront()
     }
 
+    //email validation
+    func isValidEmail(_ email: String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+
+        let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailPred.evaluate(with: email)
+    }
+    
 }

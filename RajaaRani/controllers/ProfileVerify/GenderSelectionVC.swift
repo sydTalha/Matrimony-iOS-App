@@ -9,23 +9,34 @@ import UIKit
 class GenderSelectionVC: UIViewController {
 
     //MARK:- Properties
+    var user: User?
+    
     
     //MARK:- Outlets
     @IBOutlet weak var maleOpt_view: UIView!
     @IBOutlet weak var femaleOpt_view: UIView!
     
+    @IBOutlet weak var emailTitle_lbl: UILabel!
     
     //MARK:- Actions
     
+    @IBAction func backBtnTapped(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    
+    
     @IBAction func maleTapped(_ sender: UIButton) {
         selectMaleOption()
+        self.user?.gender = "male"
         performSegue(withIdentifier: "goToDob", sender: self)
     }
     
     @IBAction func femaleTapped(_ sender: UIButton) {
         
         selectFemaleOption()
-        
+        self.user?.gender = "female"
+        performSegue(withIdentifier: "goToDob", sender: self)
     }
     
     
@@ -40,6 +51,14 @@ extension GenderSelectionVC{
         self.setupInterface()
         // Do any additional setup after loading the view.
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToDob"{
+            let destVC = segue.destination as! BirthdaySelectionVC
+            destVC.user = self.user
+        }
+    }
+    
 }
 
 
@@ -47,7 +66,7 @@ extension GenderSelectionVC{
 extension GenderSelectionVC{
     
     func setupInterface(){
-        
+        emailTitle_lbl.text = user?.email
     }
     
     

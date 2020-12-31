@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		321DCAFEB01998728F996044 /* Pods_RajaaRani.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0100B7E4B052E4CF0F347257 /* Pods_RajaaRani.framework */; };
+		65040C682595E6E8005D0550 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65040C672595E6E8005D0550 /* User.swift */; };
+		65040CA025962E07005D0550 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65040C9F25962E07005D0550 /* Utilities.swift */; };
 		65123BA6258BA56600DB8C9D /* EmailVerifyVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */; };
 		65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */; };
 		654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654CD62E2590C838001B0581 /* ProfileDetailView.swift */; };
@@ -34,6 +36,8 @@
 
 /* Begin PBXFileReference section */
 		0100B7E4B052E4CF0F347257 /* Pods_RajaaRani.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RajaaRani.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		65040C672595E6E8005D0550 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		65040C9F25962E07005D0550 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmailVerifyVC.swift; sourceTree = "<group>"; };
 		65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Dashboard.storyboard; sourceTree = "<group>"; };
 		654CD62E2590C838001B0581 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
@@ -110,6 +114,7 @@
 		657A24E82586773F007C9B50 /* models */ = {
 			isa = PBXGroup;
 			children = (
+				65040C672595E6E8005D0550 /* User.swift */,
 			);
 			path = models;
 			sourceTree = "<group>";
@@ -128,9 +133,9 @@
 			isa = PBXGroup;
 			children = (
 				657A24D725865E65007C9B50 /* Main.storyboard */,
-				657A24DC25865E66007C9B50 /* LaunchScreen.storyboard */,
 				65A1E2082588F99F00A028E6 /* ProfileVerification.storyboard */,
 				65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */,
+				657A24DC25865E66007C9B50 /* LaunchScreen.storyboard */,
 			);
 			path = views;
 			sourceTree = "<group>";
@@ -140,6 +145,7 @@
 			children = (
 				65A1E1F82588A6C700A028E6 /* Extensions.swift */,
 				65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */,
+				65040C9F25962E07005D0550 /* Utilities.swift */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -354,8 +360,10 @@
 				65895F73258A069E0054EDCC /* BirthdaySelectionVC.swift in Sources */,
 				6583A603258CCDCA00C0DE6B /* HomeVC.swift in Sources */,
 				65533E5B25949F4D0058F941 /* ProfileCard.swift in Sources */,
+				65040CA025962E07005D0550 /* Utilities.swift in Sources */,
 				6583A60C258CCDF400C0DE6B /* SettingsVC.swift in Sources */,
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
+				65040C682595E6E8005D0550 /* User.swift in Sources */,
 				65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */,
 				65123BA6258BA56600DB8C9D /* EmailVerifyVC.swift in Sources */,
 				657A24D225865E65007C9B50 /* AppDelegate.swift in Sources */,

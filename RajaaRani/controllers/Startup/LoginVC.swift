@@ -20,6 +20,9 @@ class LoginVC: UIViewController {
     
     let hud_google = JGProgressHUD(style: .dark)
     
+    var existingUser: User?
+    
+    
     //MARK:- Outlets
     @IBOutlet weak var report_view: UIView!
     
@@ -45,6 +48,9 @@ class LoginVC: UIViewController {
         GIDSignIn.sharedInstance()?.presentingViewController = self
         GIDSignIn.sharedInstance()?.signIn()
         
+        
+        
+        //Notifications
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "hide_indicator_err"), object: nil, queue: nil,
         using: self.hide_indicator_notification)
         NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "show_indicator"), object: nil, queue: nil,
@@ -77,15 +83,15 @@ extension LoginVC{
         hud_google.dismiss()
         
         if let user = notification.userInfo?["userInfo"] as? GIDGoogleUser{
-            let userId = user.userID                  // For client-side use only!
-            let idToken = user.authentication.idToken // Safe to send to the server
-            let fullName = user.profile.name
-            let givenName = user.profile.givenName
-            let familyName = user.profile.familyName
-            let email = user.profile.email
+//            let userId = user.userID                  // For client-side use only!
+//            let idToken = user.authentication.idToken // Safe to send to the server
+//            let fullName = user.profile.name
+//            let givenName = user.profile.givenName
+//            let familyName = user.profile.familyName
+//            let email = user.profile.email
             
             
-            print(userId, idToken, fullName, givenName, familyName, email)
+//            print(userId, idToken, fullName, givenName, familyName, email)
         }
         
         print("segue to next")
@@ -107,9 +113,38 @@ extension LoginVC{
 
 //MARK:- Lifecycle
 extension LoginVC{
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        let userDefaults = UserDefaults.standard
+        let decoded  = userDefaults.data(forKey: "user")
+        if decoded != nil{
+            let decodedUser = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as? User
+            
+            if decodedUser != nil{
+                self.existingUser = decodedUser
+                performSegue(withIdentifier: "goToHome", sender: self)
+            }
+        }
+        
+        else{
+            
+        }
+        
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToHome"{
+            let tabVC = segue.destination as! UITabBarController
+            let destVC = tabVC.children.first as! HomeVC
+            destVC.user = self.existingUser
+        }
     }
 }
 
