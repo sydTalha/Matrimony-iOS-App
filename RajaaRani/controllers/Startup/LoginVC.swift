@@ -62,7 +62,7 @@ class LoginVC: UIViewController {
     }
     
     @IBAction func facebookTapped(_ sender: Any) {
-        
+        performSegue(withIdentifier: "goToSettings", sender: self)
     }
     
     

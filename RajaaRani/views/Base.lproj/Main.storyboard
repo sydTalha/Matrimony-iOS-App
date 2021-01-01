@@ -9,6 +9,16 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
+        <!--dashboard_tab-->
+        <scene sceneID="nG4-XH-mfA">
+            <objects>
+                <viewControllerPlaceholder storyboardName="Dashboard" referencedIdentifier="dashboard_tab" id="KhT-QA-t9Q" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="6eP-7q-Y1E"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ngh-NQ-Vcd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1746" y="-394"/>
+        </scene>
         <!--LoginVC-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -253,6 +263,7 @@
                         <outlet property="videoLayer" destination="XdI-SV-1fM" id="wxe-bG-HeG"/>
                         <segue destination="XUN-dm-dKB" kind="show" identifier="goToEmail" id="JEs-aF-8qc"/>
                         <segue destination="wg9-pA-gAV" kind="presentation" identifier="goToHome" modalPresentationStyle="fullScreen" id="TQD-rx-gN5"/>
+                        <segue destination="KhT-QA-t9Q" kind="show" identifier="goToSettings" id="aEe-Sy-bOs"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

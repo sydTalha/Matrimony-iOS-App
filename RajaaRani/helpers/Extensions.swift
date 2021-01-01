@@ -69,6 +69,18 @@ extension UIView {
         layer.masksToBounds = false
     }
     
+    func setSmallShadow(){
+        //layer.cornerRadius = 55
+        layer.masksToBounds = true
+
+        backgroundColor = UIColor.white
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOpacity = 0.9
+        layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+        layer.shadowRadius = 4.0
+        layer.masksToBounds = false
+    }
+    
     
     class func fromNib<T: UIView>() -> T {
         return Bundle(for: T.self).loadNibNamed(String(describing: T.self), owner: nil, options: nil)![0] as! T
