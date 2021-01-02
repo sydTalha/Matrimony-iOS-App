@@ -47,16 +47,18 @@ extension HomeVC{
     
     
     override func viewDidAppear(_ animated: Bool) {
+        self.cardStack_main.reloadData()
         
-        cardStack_main.delegate = self
-        cardStack_main.dataSource = self
+    }
+    override func viewWillAppear(_ animated: Bool) {
         self.cardStack_main.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
-        
+        cardStack_main.delegate = self
+        cardStack_main.dataSource = self
         
         
         
