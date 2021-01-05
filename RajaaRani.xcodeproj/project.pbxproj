@@ -37,6 +37,7 @@
 		65A843E9259F65AB00A75EBD /* SwitchSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A843E8259F65AB00A75EBD /* SwitchSectionCell.swift */; };
 		65A843EC259F65DF00A75EBD /* BtnSectionCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A843EB259F65DF00A75EBD /* BtnSectionCell.swift */; };
 		65A843EF259F67F700A75EBD /* SettingsMainVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65A843EE259F67F700A75EBD /* SettingsMainVC.swift */; };
+		65F5E0A625A36D7F0016B977 /* CompleteProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5E0A525A36D7F0016B977 /* CompleteProfileVC.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -72,6 +73,7 @@
 		65A843E8259F65AB00A75EBD /* SwitchSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwitchSectionCell.swift; sourceTree = "<group>"; };
 		65A843EB259F65DF00A75EBD /* BtnSectionCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BtnSectionCell.swift; sourceTree = "<group>"; };
 		65A843EE259F67F700A75EBD /* SettingsMainVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsMainVC.swift; sourceTree = "<group>"; };
+		65F5E0A525A36D7F0016B977 /* CompleteProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteProfileVC.swift; sourceTree = "<group>"; };
 		845866F6891F120369F0B68D /* Pods-RajaaRani.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.debug.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.debug.xcconfig"; sourceTree = "<group>"; };
 		B4C3E1CDF18CFDF5A9EEAADD /* Pods-RajaaRani.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.release.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,6 +197,7 @@
 				65A1E20D25890DE400A028E6 /* GenderSelectionVC.swift */,
 				65895F72258A069E0054EDCC /* BirthdaySelectionVC.swift */,
 				65123BA5258BA56600DB8C9D /* EmailVerifyVC.swift */,
+				65F5E0A525A36D7F0016B977 /* CompleteProfileVC.swift */,
 			);
 			path = ProfileVerify;
 			sourceTree = "<group>";
@@ -412,6 +415,7 @@
 				65A843EF259F67F700A75EBD /* SettingsMainVC.swift in Sources */,
 				65A843EC259F65DF00A75EBD /* BtnSectionCell.swift in Sources */,
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
+				65F5E0A625A36D7F0016B977 /* CompleteProfileVC.swift in Sources */,
 				65040C682595E6E8005D0550 /* User.swift in Sources */,
 				65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */,
 				652902EA259E2C0700CE0293 /* SettingsTableViewCell.swift in Sources */,

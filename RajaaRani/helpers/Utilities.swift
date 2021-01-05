@@ -11,4 +11,5 @@ import Foundation
 struct config {
     static let registerURL = "https://secret-fortress-76633.herokuapp.com/register"
     static let verifyURL = "https://secret-fortress-76633.herokuapp.com/auth/verify"
+    static let loginURL = "https://secret-fortress-76633.herokuapp.com/login"
 }

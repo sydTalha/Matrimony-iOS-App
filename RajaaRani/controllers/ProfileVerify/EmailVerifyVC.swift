@@ -34,7 +34,7 @@ class EmailVerifyVC: UIViewController {
     
     @IBAction func codeResendTapped(_ sender: UIButton) {
         
-        performSegue(withIdentifier: "goToDashboard", sender: self)
+        performSegue(withIdentifier: "goToCompleteProfile", sender: self)
     }
     
     

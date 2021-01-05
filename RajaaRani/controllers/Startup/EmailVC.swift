@@ -7,6 +7,9 @@
 
 import UIKit
 import AVFoundation
+import Alamofire
+import SwiftyJSON
+import JGProgressHUD
 
 class EmailVC: UIViewController {
 
@@ -61,8 +64,10 @@ class EmailVC: UIViewController {
                 
                 //valid email
                 
-                self.user?.email = emailText
-                performSegue(withIdentifier: "goToVerify", sender: self)
+                //check if user exists from Login API call
+                self.checkUser(email: emailText)
+                
+                
             }
             else{
                 let alert = UIAlertController(title: "Invalid Email", message: "Please enter a valid email address", preferredStyle: UIAlertController.Style.alert)
@@ -173,5 +178,43 @@ extension EmailVC{
         let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
         return emailPred.evaluate(with: email)
     }
+        
+    func checkUser(email: String){
+        
+        let hud = JGProgressHUD(style: .dark)
+        hud.show(in: self.view)
+        print("here")
+        let params = ["email": email]
+        AF.request(config.loginURL, method: .get, parameters: params, encoding: URLEncoding.default).responseJSON { (res) in
+            let responseCode = res.response?.statusCode ?? 0
+            print(res.result)
+            if responseCode >= 400 && responseCode <= 499{
+                let result = JSON(res.value)
+                print(result)
+                let errorMsg = result["message"].stringValue
+                if errorMsg == "null"{
+                    self.user?.email = email
+                    self.performSegue(withIdentifier: "goToVerify", sender: self)
+                }
+                DispatchQueue.main.async {
+                    hud.dismiss()
+                    let alert = UIAlertController(title: "Alert", message: "\(errorMsg)", preferredStyle: UIAlertController.Style.alert)
+                    
+                    
+                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (action) in
+                        
+                    }))
+                    self.present(alert, animated: true, completion: nil)
+                }
+                
+            }
+            else if responseCode == 200{
+                
+                self.performSegue(withIdentifier: "goToDashboard", sender: self)
+            }
+            
+        }
+    }
+    
     
 }
