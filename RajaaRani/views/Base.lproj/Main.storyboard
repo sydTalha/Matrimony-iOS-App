@@ -9,10 +9,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--dashboard_tab-->
+        <!--nickname_vc-->
         <scene sceneID="nG4-XH-mfA">
             <objects>
-                <viewControllerPlaceholder storyboardName="Dashboard" referencedIdentifier="dashboard_tab" id="KhT-QA-t9Q" sceneMemberID="viewController">
+                <viewControllerPlaceholder storyboardName="ProfileCompletion" referencedIdentifier="nickname_vc" id="KhT-QA-t9Q" sceneMemberID="viewController">
                     <navigationItem key="navigationItem" id="6eP-7q-Y1E"/>
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ngh-NQ-Vcd" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
