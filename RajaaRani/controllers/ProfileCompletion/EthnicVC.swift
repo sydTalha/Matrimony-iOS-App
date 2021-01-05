@@ -37,13 +37,13 @@ class EthnicVC: UIViewController {
 extension EthnicVC{
     @objc func textFieldDidChange(_ textField: UITextField) {
         let text = textField.text ?? ""
-        print(text)
+        
         if text != ""{
             self.filteredOptions.removeAll()
             for opt in self.tmpOptions{
                 if opt.lowercased().hasPrefix(text.lowercased()) || opt.lowercased().contains(text){
                     self.filteredOptions.append(opt)
-                    print(filteredOptions.count)
+                    
                 }
             }
             self.options = self.filteredOptions
