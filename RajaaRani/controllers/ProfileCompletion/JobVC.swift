@@ -1,5 +1,5 @@
 //
-//  EthnicVC.swift
+//  JobVC.swift
 //  RajaaRani
 //
 
@@ -7,11 +7,10 @@
 
 import UIKit
 
-
-class EthnicVC: UIViewController {
+class JobVC: UIViewController {
 
     //MARK:- Properties
-    var options = ["Afghan", "African American", "Arab", "Bangladeshi", "Berber", "Asian"]
+    var options = ["Accountant", "Acting Professional", "Actor", "Actuary", "Administration Employee", "Administration Professional"]
     var filteredOptions = [String]()
     var tmpOptions = [String]()
     var user: User?
@@ -19,22 +18,20 @@ class EthnicVC: UIViewController {
     //MARK:- Outlets
     
     @IBOutlet weak var tableView: UITableView!
+    
     @IBOutlet weak var searchTxtField: UITextField!
+    
     //MARK:- Actions
     
     @IBAction func backBtnTapped(_ sender: UIButton) {
-        
         self.navigationController?.popViewController(animated: true)
-        
     }
-    
-    
     
 
 }
 
 //MARK:- Event Handlers
-extension EthnicVC{
+extension JobVC{
     @objc func textFieldDidChange(_ textField: UITextField) {
         let text = textField.text ?? ""
         
@@ -63,29 +60,21 @@ extension EthnicVC{
     @objc func keyboardWillHide(sender: NSNotification) {
          self.view.frame.origin.y = 0 // Move view to original position
     }
-    
 }
 
 //MARK:- Lifecycle
-extension EthnicVC{
+extension JobVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
         
     }
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "goToJob"{
-            let destVC = segue.destination as! JobVC
-            destVC.user = self.user
-        }
-    }
 }
 
 //MARK:- Interface Setup
-extension EthnicVC{
+extension JobVC{
     func setupInterface(){
-        self.searchTxtField.delegate = self
+        
         self.tmpOptions = options
         
         
@@ -109,7 +98,7 @@ extension EthnicVC{
 
 
 //MARK:- TableView delegates
-extension EthnicVC: UITableViewDelegate, UITableViewDataSource{
+extension JobVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return options.count
     }
@@ -124,22 +113,15 @@ extension EthnicVC: UITableViewDelegate, UITableViewDataSource{
         return cell
     }
     
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.user?.ethnic = self.options[indexPath.row].lowercased()
-        
-        self.performSegue(withIdentifier: "goToJob", sender: self)
+        self.user?.job = self.options[indexPath.row].lowercased()
+        performSegue(withIdentifier: "goToPhoneVerify", sender: self)
     }
-    
-}
-
-//MARK:- TextField Delegates
-extension EthnicVC: UITextFieldDelegate{
     
     
 }
 
 //MARK:- Helpers
-extension EthnicVC{
+extension JobVC{
     
 }

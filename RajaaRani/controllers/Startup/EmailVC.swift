@@ -104,7 +104,7 @@ extension EmailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        user = User(email: "", DOB: "", gender: "")
+        user = User(email: "", DOB: "", gender: "", nickname: "", sect: "", ethnic: "", job: "")
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

@@ -11,7 +11,7 @@ class SectVC: UIViewController {
 
     
     //MARK:- Properties
-    
+    var user: User?
     
     //MARK:- Outlets
     
@@ -27,6 +27,7 @@ class SectVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func sunniTapped(_ sender: UIButton) {
+        user?.sect = "sunni"
         UIView.transition(with: self.sunniBtn,
                           duration: 0.3,
               options: .transitionCrossDissolve,
@@ -50,6 +51,7 @@ class SectVC: UIViewController {
     }
     
     @IBAction func shiaTapped(_ sender: UIButton) {
+        user?.sect = "shia"
         UIView.transition(with: self.sunniBtn,
                           duration: 0.3,
               options: .transitionCrossDissolve,
@@ -73,6 +75,7 @@ class SectVC: UIViewController {
     }
     
     @IBAction func othersTapped(_ sender: UIButton) {
+        user?.sect = "other"
         UIView.transition(with: self.sunniBtn,
                           duration: 0.3,
               options: .transitionCrossDissolve,
@@ -100,6 +103,9 @@ class SectVC: UIViewController {
         performSegue(withIdentifier: "goToEthnic", sender: self)
     }
     
+    @IBAction func backBtnTapped(_ sender: UIButton) {
+        self.navigationController?.popViewController(animated: true)
+    }
     
 
 
@@ -118,13 +124,20 @@ extension SectVC{
         self.setupInterface()
             
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToEthnic"{
+            let destVC = segue.destination as! EthnicVC
+            destVC.user = self.user
+        }
+    }
 }
 
 //MARK:- Interface Setup
 extension SectVC{
     func setupInterface(){
         bgCardView.setCardView()
-        
+        user?.sect = "sunni"
         
         
     }

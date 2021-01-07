@@ -556,7 +556,17 @@
                 </viewControllerPlaceholder>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Qgd-Cl-4hP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4193" y="149"/>
+            <point key="canvasLocation" x="4140" y="311"/>
+        </scene>
+        <!--nickname_vc-->
+        <scene sceneID="Qj9-G6-hor">
+            <objects>
+                <viewControllerPlaceholder storyboardName="ProfileCompletion" referencedIdentifier="nickname_vc" id="2tZ-9b-cAy" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="x8V-Tc-J9x"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MCT-Kx-bwE" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4128" y="-41"/>
         </scene>
         <!--Complete ProfileVC-->
         <scene sceneID="BjO-j4-7x5">
@@ -672,6 +682,7 @@
                     <connections>
                         <outlet property="report_view" destination="hvt-J4-w7K" id="M8N-PP-px4"/>
                         <segue destination="4dz-Sj-P0h" kind="show" identifier="goToDashboard" id="0LN-Ai-Ghl"/>
+                        <segue destination="2tZ-9b-cAy" kind="show" identifier="goToNickname" id="O2y-3r-mF1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZWM-EF-dFe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

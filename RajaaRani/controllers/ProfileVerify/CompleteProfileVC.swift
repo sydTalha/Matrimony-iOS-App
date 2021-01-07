@@ -22,7 +22,7 @@ class CompleteProfileVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func createProfileTapped(_ sender: UIButton) {
-        
+        performSegue(withIdentifier: "goToNickname", sender: self)
     }
     
     @IBAction func laterBtnTapped(_ sender: UIButton) {

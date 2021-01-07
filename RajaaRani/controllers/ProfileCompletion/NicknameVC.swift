@@ -10,7 +10,7 @@ import UIKit
 class NicknameVC: UIViewController {
 
     //MARK:- Properties
-    
+    var user: User?
     
     //MARK:- Outlets
     
@@ -20,10 +20,27 @@ class NicknameVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func createProfileTapped(_ sender: UIButton) {
-        performSegue(withIdentifier: "goToSect", sender: self)
+        
+        if nicknameTxtField.text?.isEmpty ?? true{
+            displayDialog(msg: "Please enter a nickname")
+        }
+        else{
+            if isValidInput(str: nicknameTxtField.text!){
+                self.user?.nickname = nicknameTxtField.text!
+                performSegue(withIdentifier: "goToSect", sender: self)
+            }
+            else{
+                displayDialog(msg: "Please enter a valid nickname")
+            }
+        }
+        
     }
     
-
+    @IBAction func backBtnTapped(_ sender: UIButton) {
+        //self.navigationController?.popViewController(animated: true)
+        performSegue(withIdentifier: "goToDashboard", sender: self)
+    }
+    
 
 }
 
@@ -46,7 +63,15 @@ extension NicknameVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
-
+        fetchUserFromUserDefaults()
+    }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToSect"{
+            let destVC = segue.destination as! SectVC
+            destVC.user = self.user
+        }
     }
 }
 
@@ -67,9 +92,37 @@ extension NicknameVC{
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: UIResponder.keyboardWillHideNotification, object: nil)
         
     }
+    
+    
+    func fetchUserFromUserDefaults(){
+        let userDefaults = UserDefaults.standard
+        let decoded  = userDefaults.data(forKey: "user")
+        if decoded != nil{
+            let decodedUser = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as? User
+            
+            if decodedUser != nil{
+                self.user = decodedUser
+                
+            }
+        }
+    }
 }
 
 //MARK:- Helpers
 extension NicknameVC{
+    func isValidInput(str:String) -> Bool {
+        
+        do{
+            let regex = try NSRegularExpression(pattern: "^[0-9a-zA-Z\\_]{7,18}$", options: .caseInsensitive)
+            if regex.matches(in: str, options: [], range: NSMakeRange(0, str.count)).count > 0 {return true}
+        }
+        catch {}
+        return false
+    }
     
+    func displayDialog(msg: String){
+        let alert = UIAlertController(title: "Alert", message: msg, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
+    }
 }
