@@ -69,6 +69,13 @@ extension JobVC{
         self.setupInterface()
         
     }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToPhoneVerify"{
+            let destVC = segue.destination as! NumberVerifyVC
+            destVC.user = self.user
+        }
+    }
 }
 
 //MARK:- Interface Setup

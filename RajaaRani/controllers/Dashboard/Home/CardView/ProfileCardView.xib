@@ -14,6 +14,9 @@
                 <outlet property="cardContentMain_view" destination="ACC-OY-mf0" id="qn8-jb-Cmj"/>
                 <outlet property="cardContent_view" destination="866-m0-gH5" id="Q5l-rm-u6k"/>
                 <outlet property="content_view" destination="iN0-l3-epB" id="sHp-FJ-erZ"/>
+                <outlet property="desc_lbl" destination="0Rz-4e-DUp" id="bIg-hq-cHf"/>
+                <outlet property="name_lbl" destination="K05-Q1-sQX" id="hYr-8J-0zm"/>
+                <outlet property="profileDetail_view" destination="Avv-Q8-YY7" id="U80-4g-UDh"/>
                 <outlet property="profile_imgView" destination="h29-MN-M6L" id="b0g-k5-kDB"/>
                 <outlet property="topCard_view" destination="aQK-F1-xUg" id="oTn-rJ-OQb"/>
             </connections>

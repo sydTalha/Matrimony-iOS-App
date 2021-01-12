@@ -10,7 +10,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ProfileDetailView" customModule="RajaaRani" customModuleProvider="target">
             <connections>
+                <outlet property="cast_lbl" destination="gTM-BF-778" id="voW-J2-MLR"/>
+                <outlet property="color_lbl" destination="mu6-yC-hFT" id="1EJ-rb-mCR"/>
                 <outlet property="content_view" destination="iN0-l3-epB" id="eOd-wo-13t"/>
+                <outlet property="education_lbl" destination="Kgm-aC-vFP" id="ief-Ba-Prd"/>
+                <outlet property="height_lbl" destination="Ofl-FV-62K" id="pBg-4r-fy1"/>
+                <outlet property="job_lbl" destination="gdv-CC-aei" id="fpk-aV-uUK"/>
+                <outlet property="martialStatus_lbl" destination="UCL-aA-DT1" id="bT2-Vq-dnk"/>
+                <outlet property="religion_lbl" destination="o1C-Uq-zbV" id="cBa-n9-NcX"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>

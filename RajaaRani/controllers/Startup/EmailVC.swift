@@ -104,12 +104,17 @@ extension EmailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        user = User(email: "", DOB: "", gender: "", nickname: "", sect: "", ethnic: "", job: "")
+        user = User(email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToVerify"{
             let destVC = segue.destination as! GenderSelectionVC
+            destVC.user = self.user
+        }
+        else if segue.identifier == "goToDashboard"{
+            let tabVC = segue.destination as! UITabBarController
+            let destVC = tabVC.children.first as! HomeVC
             destVC.user = self.user
         }
     }
@@ -188,33 +193,67 @@ extension EmailVC{
         AF.request(config.loginURL, method: .get, parameters: params, encoding: URLEncoding.default).responseJSON { (res) in
             let responseCode = res.response?.statusCode ?? 0
             print(res.result)
+            let result = JSON(res.value)
+            
             if responseCode >= 400 && responseCode <= 499{
-                let result = JSON(res.value)
+                
                 print(result)
                 let errorMsg = result["message"].stringValue
                 if errorMsg == "null"{
                     self.user?.email = email
                     self.performSegue(withIdentifier: "goToVerify", sender: self)
                 }
-                DispatchQueue.main.async {
-                    hud.dismiss()
-                    let alert = UIAlertController(title: "Alert", message: "\(errorMsg)", preferredStyle: UIAlertController.Style.alert)
-                    
-                    
-                    alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (action) in
+                else{
+                    DispatchQueue.main.async {
+                        hud.dismiss()
+                        let alert = UIAlertController(title: "Alert", message: "\(errorMsg)", preferredStyle: UIAlertController.Style.alert)
                         
-                    }))
-                    self.present(alert, animated: true, completion: nil)
+                        
+                        alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: { (action) in
+                            
+                        }))
+                        self.present(alert, animated: true, completion: nil)
+                    }
                 }
+                
                 
             }
             else if responseCode == 200{
+                self.user = self.parseUserObj(result: result)
+                
+                //save to user defaults
+                let userDefaults = UserDefaults.standard
+                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: self.user!)
+                
+                userDefaults.set(encodedData, forKey: "user")
+                
+                userDefaults.synchronize()
                 
                 self.performSegue(withIdentifier: "goToDashboard", sender: self)
+            }
+            else{
+                DispatchQueue.main.async {
+                    hud.dismiss()
+                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again"), animated: true, completion: nil)
+                }
             }
             
         }
     }
     
+    
+    func parseUserObj(result: JSON) -> User{
+        let dob = result["DOB"].stringValue
+        let gender = result["gender"].stringValue
+        let email = result["email"].stringValue
+        let city = result["location"]["city"].stringValue
+        let country = result["location"]["country"].stringValue
+        let lat = result["location"]["coords"]["lat"].doubleValue
+        let lon = result["location"]["coords"]["lon"].doubleValue
+        
+        let user = User(email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
+        
+        return user
+    }
     
 }

@@ -16,6 +16,7 @@
 		652902EA259E2C0700CE0293 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652902E9259E2C0700CE0293 /* SettingsTableViewCell.swift */; };
 		652902EE259E331600CE0293 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652902ED259E331600CE0293 /* SettingsVC.swift */; };
 		653777AD25A4975200AEB64B /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653777AC25A4975200AEB64B /* NicknameVC.swift */; };
+		654A7EF725A8B244002B5D0D /* ProfileUnderReviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654A7EF625A8B244002B5D0D /* ProfileUnderReviewVC.swift */; };
 		654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 654CD62E2590C838001B0581 /* ProfileDetailView.swift */; };
 		65533E5825949F1B0058F941 /* ProfileCardView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 65533E5725949F1B0058F941 /* ProfileCardView.xib */; };
 		65533E5B25949F4D0058F941 /* ProfileCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65533E5A25949F4D0058F941 /* ProfileCard.swift */; };
@@ -58,6 +59,7 @@
 		652902E9259E2C0700CE0293 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		652902ED259E331600CE0293 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		653777AC25A4975200AEB64B /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
+		654A7EF625A8B244002B5D0D /* ProfileUnderReviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileUnderReviewVC.swift; sourceTree = "<group>"; };
 		654CD62E2590C838001B0581 /* ProfileDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileDetailView.swift; sourceTree = "<group>"; };
 		65533E5725949F1B0058F941 /* ProfileCardView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ProfileCardView.xib; sourceTree = "<group>"; };
 		65533E5A25949F4D0058F941 /* ProfileCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCard.swift; sourceTree = "<group>"; };
@@ -136,6 +138,7 @@
 				65EFA8E525A4DAC100BD1751 /* JobVC.swift */,
 				65A13F6225A59C5500F92BAD /* NumberVerifyVC.swift */,
 				6516DE5C25A6123F0064FF57 /* SelfieVC.swift */,
+				654A7EF625A8B244002B5D0D /* ProfileUnderReviewVC.swift */,
 			);
 			path = ProfileCompletion;
 			sourceTree = "<group>";
@@ -458,6 +461,7 @@
 				65A843EC259F65DF00A75EBD /* BtnSectionCell.swift in Sources */,
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
 				65F5E0A625A36D7F0016B977 /* CompleteProfileVC.swift in Sources */,
+				654A7EF725A8B244002B5D0D /* ProfileUnderReviewVC.swift in Sources */,
 				65040C682595E6E8005D0550 /* User.swift in Sources */,
 				65A1E1FD2588A8C400A028E6 /* NetworkMonitor.swift in Sources */,
 				652902EA259E2C0700CE0293 /* SettingsTableViewCell.swift in Sources */,

@@ -98,6 +98,12 @@ extension BirthdaySelectionVC{
         let maxDate = Calendar.current.date(byAdding: .year, value: -18, to: Date())
         datePicker.maximumDate = maxDate
         
+        let dateFormatter = DateFormatter()
+        let enUSPosixLocale = Locale(identifier: "en_US_POSIX")
+        dateFormatter.locale = enUSPosixLocale
+        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZZZZZ"
+        let createdDate = dateFormatter.string(from: maxDate ?? Date())
+        self.user?.DOB = createdDate
         emailTitle_lbl.text = user?.email
         
     }

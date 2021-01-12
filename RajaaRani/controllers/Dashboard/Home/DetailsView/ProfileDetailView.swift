@@ -12,6 +12,20 @@ class ProfileDetailView: UIView {
     //MARK:- Outlets
     @IBOutlet var content_view: UIView!
     
+    @IBOutlet weak var martialStatus_lbl: UILabel!
+    
+    @IBOutlet weak var religion_lbl: UILabel!
+    
+    @IBOutlet weak var cast_lbl: UILabel!
+    
+    @IBOutlet weak var height_lbl: UILabel!
+    
+    @IBOutlet weak var color_lbl: UILabel!
+    
+    @IBOutlet weak var education_lbl: UILabel!
+    
+    @IBOutlet weak var job_lbl: UILabel!
+    
     
     
     //MARK:- Lifecycle

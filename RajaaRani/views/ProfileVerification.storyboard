@@ -681,8 +681,8 @@
                     </view>
                     <connections>
                         <outlet property="report_view" destination="hvt-J4-w7K" id="M8N-PP-px4"/>
-                        <segue destination="4dz-Sj-P0h" kind="show" identifier="goToDashboard" id="0LN-Ai-Ghl"/>
-                        <segue destination="2tZ-9b-cAy" kind="show" identifier="goToNickname" id="O2y-3r-mF1"/>
+                        <segue destination="4dz-Sj-P0h" kind="presentation" identifier="goToDashboard" modalPresentationStyle="fullScreen" id="0LN-Ai-Ghl"/>
+                        <segue destination="2tZ-9b-cAy" kind="presentation" identifier="goToNickname" modalPresentationStyle="fullScreen" id="O2y-3r-mF1"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZWM-EF-dFe" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

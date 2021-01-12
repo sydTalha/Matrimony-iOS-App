@@ -112,12 +112,10 @@ extension NicknameVC{
 extension NicknameVC{
     func isValidInput(str:String) -> Bool {
         
-        do{
-            let regex = try NSRegularExpression(pattern: "^[0-9a-zA-Z\\_]{7,18}$", options: .caseInsensitive)
-            if regex.matches(in: str, options: [], range: NSMakeRange(0, str.count)).count > 0 {return true}
-        }
-        catch {}
-        return false
+        guard str.count > 2, str.count < 18 else { return false }
+
+            let predicateTest = NSPredicate(format: "SELF MATCHES %@", "^(([^ ]?)(^[a-zA-Z].*[a-zA-Z]$)([^ ]?))$")
+            return predicateTest.evaluate(with: str)
     }
     
     func displayDialog(msg: String){
