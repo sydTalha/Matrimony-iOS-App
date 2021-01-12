@@ -166,7 +166,7 @@ extension HomeVC{
 
 
 
-//MARK:- Kolada CardView Delegate - Datasource
+//MARK:- Kolada CardView Delegate
 extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
     func koloda(_ koloda: KolodaView, viewForCardAt index: Int) -> UIView {
         let s = UIView()
@@ -239,7 +239,7 @@ extension HomeVC{
                       "gender": self.user?.gender ?? "",
                       "city": self.user?.city ?? "",
         "country": self.user?.country ?? ""] as [String: Any]
-        
+        print(params)
         AF.request(config.fetchPeopleURL, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (resp) in
             let result = JSON(resp.value)
             let responseCode = resp.response?.statusCode ?? 0
@@ -330,7 +330,16 @@ extension HomeVC{
                 }
             }
             else if responseCode == 200{
-                
+                let isMatched = result["success"].boolValue
+                print("is matched \(isMatched)")
+                if(isMatched){
+                    //user matched
+                    //..
+                    print("congrats! you matched with \(profileEmail)")
+                }
+                else{
+                    
+                }
             }
             
         }
