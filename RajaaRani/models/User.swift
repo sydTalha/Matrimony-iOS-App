@@ -10,6 +10,7 @@ import UIKit
 
 class User: NSObject, NSCoding{
     
+    var _id: String = ""
     var email: String = ""
     var DOB: String = ""
     var gender: String = ""
@@ -25,6 +26,7 @@ class User: NSObject, NSCoding{
     var isCompleted: Bool = false
     
     func encode(with coder: NSCoder) {
+        coder.encode(_id, forKey: "_id")
         coder.encode(email, forKey: "email")
         coder.encode(DOB, forKey: "DOB")
         coder.encode(gender, forKey: "gender")
@@ -41,6 +43,7 @@ class User: NSObject, NSCoding{
     }
     
     required convenience init(coder aDecoder: NSCoder) {
+        let _id = aDecoder.decodeObject(forKey: "_id") as! String
         let email = aDecoder.decodeObject(forKey: "email") as! String
         let DOB = aDecoder.decodeObject(forKey: "DOB") as! String
         let gender = aDecoder.decodeObject(forKey: "gender") as! String
@@ -54,11 +57,12 @@ class User: NSObject, NSCoding{
         let job = aDecoder.decodeObject(forKey: "job") as! String
         let phone = aDecoder.decodeObject(forKey: "phone") as! String
         let isCompleted = aDecoder.decodeBool(forKey: "isCompleted")
-        self.init(email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+        self.init(_id: _id, email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
     }
     
     
-    init(email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool) {
+    init(_id: String, email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool) {
+        self._id = _id
         self.email = email
         self.DOB = DOB
         self.gender = gender

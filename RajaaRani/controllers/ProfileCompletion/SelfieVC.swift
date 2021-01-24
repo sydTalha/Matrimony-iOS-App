@@ -125,6 +125,14 @@ extension SelfieVC{
         self.setupInterface()
         
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToUnderReview"{
+            let destVC = segue.destination as! ProfileUnderReviewVC
+            destVC.user = self.user
+        }
+    }
 }
 
 //MARK:- Interface Setup
@@ -223,6 +231,7 @@ extension SelfieVC{
             else if responseCode == 200{
                 let result = JSON(response.value ?? "register response nil")
                 
+                self.user = self.parseUserObj(result: result)
                 
                 //save user prefs
                 let userDefaults = UserDefaults.standard
@@ -245,5 +254,27 @@ extension SelfieVC{
                 
             }
        }
+    }
+    
+    
+    func parseUserObj(result: JSON) -> User{
+        let _id = result["_id"].stringValue
+        let dob = result["DOB"].stringValue
+        let gender = result["gender"].stringValue
+        let email = result["email"].stringValue
+        let city = result["location"]["city"].stringValue
+        let country = result["location"]["country"].stringValue
+        let lat = result["location"]["coords"]["lat"].doubleValue
+        let lon = result["location"]["coords"]["lon"].doubleValue
+        let isCompleted = result["isCompleted"].boolValue
+        
+        let nickname = result["nickname"].stringValue
+        let sect = result["sect"].stringValue
+        let ethnic = result["ethnic"].stringValue
+        let job = result["job"].stringValue
+        let phone = result["phone"].stringValue
+        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+        
+        return userObj
     }
 }

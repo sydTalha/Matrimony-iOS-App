@@ -6,12 +6,14 @@
 //
 
 import UIKit
+import Quickblox
+import QuickbloxWebRTC
 
 
 class CompleteProfileVC: UIViewController {
 
     //MARK:- Properties
-    
+    var user: User?
     
     //MARK:- Outlets
     
@@ -26,6 +28,7 @@ class CompleteProfileVC: UIViewController {
     }
     
     @IBAction func laterBtnTapped(_ sender: UIButton) {
+        
         performSegue(withIdentifier: "goToDashboard", sender: self)
     }
     
@@ -40,6 +43,7 @@ extension CompleteProfileVC{
         super.viewDidLoad()
         self.setupInterface()
     }
+    
 }
 
 //MARK:- Interface Setup

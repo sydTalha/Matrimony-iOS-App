@@ -1,17 +1,17 @@
 {
   "images" : [
     {
-      "filename" : "options-dots.png",
+      "filename" : "msg-ico.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
     {
-      "filename" : "options-dots@2x.png",
+      "filename" : "msg-ico@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
     },
     {
-      "filename" : "options-dots@3x.png",
+      "filename" : "msg-ico@3x.png",
       "idiom" : "universal",
       "scale" : "3x"
     }

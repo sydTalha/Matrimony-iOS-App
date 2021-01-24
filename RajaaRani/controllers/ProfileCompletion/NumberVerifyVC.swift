@@ -176,7 +176,11 @@ extension NumberVerifyVC: OTPFieldViewDelegate{
 extension NumberVerifyVC{
     func sendPhoneCode(){
         let params = ["email": self.user?.email ?? "",
-        "phone": self.phone] as [String: Any]
+        "phone": self.phone,
+        "nickname": self.user?.nickname ?? "",
+        "sect": self.user?.sect ?? "",
+        "ethnic": self.user?.ethnic ?? "",
+        "job": self.user?.job ?? ""] as [String: Any]
         AF.request(config.phoneCodeURL, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (response) in
             print(response.response?.statusCode ?? 0)
             

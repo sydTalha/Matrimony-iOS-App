@@ -137,6 +137,97 @@ extension CLLocation{
     }
 }
 
+//MARK:- UIColor
+extension UIColor {
+  convenience init(hex: String) {
+    var hex = hex
+    if hex.hasPrefix("#") {
+        hex.remove(at: hex.startIndex)
+    }
+    
+    var rgb: UInt64 = 0
+    Scanner(string: hex).scanHexInt64(&rgb)
+
+    let r = (rgb & 0xff0000) >> 16
+    let g = (rgb & 0xff00) >> 8
+    let b = rgb & 0xff
+    
+    self.init(
+      red: CGFloat(r) / 0xff,
+      green: CGFloat(g) / 0xff,
+      blue: CGFloat(b) / 0xff,
+      alpha: 1
+    )
+  }
+  
+  var hexString: String {
+    var r: CGFloat = 0
+    var g: CGFloat = 0
+    var b: CGFloat = 0
+    var a: CGFloat = 0
+    
+    self.getRed(&r, green: &g, blue: &b, alpha: &a)
+    
+    return String(
+      format: "#%02X%02X%02X",
+      Int(r * 0xff),
+      Int(g * 0xff),
+      Int(b * 0xff)
+    )
+  }
+}
+
+//MARK:- String
+extension String {
+    func convertToTimeInterval() -> TimeInterval {
+        guard self != "" else {
+            return 0
+        }
+
+        var interval:Double = 0
+
+        let parts = self.components(separatedBy: ":")
+        for (index, part) in parts.reversed().enumerated() {
+            interval += (Double(part) ?? 0) * pow(Double(60), Double(index))
+        }
+
+        return interval
+    }
+    
+    
+    func splitStringInHalf()->(firstHalf:String,secondHalf:String) {
+        let words = self.components(separatedBy: " ")
+        let halfLength = words.count / 2
+        let firstHalf = words[0..<halfLength].joined(separator: " ")
+        let secondHalf = words[halfLength..<words.count].joined(separator: " ")
+        return (firstHalf:firstHalf,secondHalf:secondHalf)
+    }
+    
+    
+    
+    func split(by length: Int) -> [String] {
+        var startIndex = self.startIndex
+        var results = [Substring]()
+
+        while startIndex < self.endIndex {
+            let endIndex = self.index(startIndex, offsetBy: length, limitedBy: self.endIndex) ?? self.endIndex
+            results.append(self[startIndex..<endIndex])
+            startIndex = endIndex
+        }
+
+        return results.map { String($0) }
+    }
+
+    
+}
+
+//MARK:- UInt
+extension UInt {
+    static func parse(from string: String) -> UInt? {
+        return UInt(string.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+    }
+}
+
 
 
 

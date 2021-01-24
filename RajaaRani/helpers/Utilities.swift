@@ -19,6 +19,9 @@ struct config {
     static let fetchPeopleURL = "https://secret-fortress-76633.herokuapp.com/find/main"
     static let swipeLeftURL = "https://secret-fortress-76633.herokuapp.com/swipe/left"
     static let swipeRightURL = "https://secret-fortress-76633.herokuapp.com/swipe/right"
+    static let matchedUsersURL = "https://secret-fortress-76633.herokuapp.com/matches"
+    static let getTwilioTokenURL = "https://secret-fortress-76633.herokuapp.com/twilio/token"
+    static let getChatIDAPI = "https://secret-fortress-76633.herokuapp.com/chats"
 }
 
 struct utils{

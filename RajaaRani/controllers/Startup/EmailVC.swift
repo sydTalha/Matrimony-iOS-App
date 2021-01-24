@@ -10,6 +10,8 @@ import AVFoundation
 import Alamofire
 import SwiftyJSON
 import JGProgressHUD
+import Quickblox
+import QuickbloxWebRTC
 
 class EmailVC: UIViewController {
 
@@ -88,7 +90,7 @@ class EmailVC: UIViewController {
 extension EmailVC{
     
     @objc func keyboardWillShow(sender: NSNotification) {
-         self.view.frame.origin.y = -180 // Move view 150 points upward
+         self.view.frame.origin.y = -215 // Move view 150 points upward
     }
 
     @objc func keyboardWillHide(sender: NSNotification) {
@@ -104,7 +106,7 @@ extension EmailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        user = User(email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
+        user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -192,7 +194,7 @@ extension EmailVC{
         let params = ["email": email]
         AF.request(config.loginURL, method: .get, parameters: params, encoding: URLEncoding.default).responseJSON { (res) in
             let responseCode = res.response?.statusCode ?? 0
-            print(res.result)
+            
             let result = JSON(res.value)
             
             if responseCode >= 400 && responseCode <= 499{
@@ -221,15 +223,21 @@ extension EmailVC{
             else if responseCode == 200{
                 self.user = self.parseUserObj(result: result)
                 
-                //save to user defaults
-                let userDefaults = UserDefaults.standard
-                let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: self.user!)
                 
-                userDefaults.set(encodedData, forKey: "user")
+                //sign in quickblox
+                if self.user?.isCompleted ?? false{
+                    //self.loginQuickBlox(hud: hud)
+                    self.saveUserInUserDefaults(user: self.user!)
+                    
+                    self.performSegue(withIdentifier: "goToDashboard", sender: self)
+                }
+                else{
+                    hud.dismiss()
+                    self.saveUserInUserDefaults(user: self.user!)
+                    self.performSegue(withIdentifier: "goToDashboard", sender: self)
+                }
                 
-                userDefaults.synchronize()
                 
-                self.performSegue(withIdentifier: "goToDashboard", sender: self)
             }
             else{
                 DispatchQueue.main.async {
@@ -243,6 +251,7 @@ extension EmailVC{
     
     
     func parseUserObj(result: JSON) -> User{
+        let _id = result["_id"].stringValue
         let dob = result["DOB"].stringValue
         let gender = result["gender"].stringValue
         let email = result["email"].stringValue
@@ -250,10 +259,113 @@ extension EmailVC{
         let country = result["location"]["country"].stringValue
         let lat = result["location"]["coords"]["lat"].doubleValue
         let lon = result["location"]["coords"]["lon"].doubleValue
+        let isCompleted = result["isCompleted"].boolValue
         
-        let user = User(email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
+        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted)
         
-        return user
+        if isCompleted{
+            userDb.nickname = result["nickname"].stringValue
+            userDb.sect = result["sect"].stringValue
+            userDb.ethnic = result["ethnic"].stringValue
+            userDb.job = result["job"].stringValue
+            userDb.phone = result["phone"].stringValue
+        }
+        
+        return userDb
     }
     
+    
+    func loginQuickBlox(hud: JGProgressHUD){
+        
+        QBRequest.logIn(withUserEmail: self.user?.email ?? "", password: self.user?._id ?? "") { (response, userResp) in
+            hud.dismiss()
+            
+            self.saveUserInUserDefaults(user: self.user!)
+            
+            self.performSegue(withIdentifier: "goToDashboard", sender: self)
+        } errorBlock: { (errorCode) in
+            
+            if errorCode.status.rawValue == 401{
+                //need to register user
+                print("here in register \(self.user?._id ?? "")")
+                let userQB = QBUUser()
+                if let user1 = self.user{
+                    var count = 0
+                    var halfID = ""
+                    for val in user1._id{
+                        if count == user1._id.count / 2{
+                            break
+                        }
+                        else{
+                            halfID = halfID + String(val)
+                        }
+                        count = count + 1
+                    }
+                    
+                    if let id = UInt.parse(from: halfID) {
+                        userQB.id = id
+                        
+                        userQB.email = user1.email
+                        userQB.fullName = user1.nickname
+                        userQB.password = user1._id
+                        print("here")
+                        
+                        QBRequest.signUp(userQB) { (response, userQBResponse) in
+                            //success
+                            
+                            if response.isSuccess{
+                                hud.dismiss()
+                                
+                                
+                            }
+                            else{
+                                print(response.error)
+                                DispatchQueue.main.async {
+                                    hud.dismiss()
+                                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again, if issue presists then contact support"), animated: true, completion: nil)
+                                }
+                            }
+                            
+                        } errorBlock: { (errorCode) in
+                            print("signup error: \(errorCode)")
+                            
+                            DispatchQueue.main.async {
+                                hud.dismiss()
+                                self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again"), animated: true, completion: nil)
+                            }
+                        }
+
+                    }
+                    
+                }
+                
+                
+                
+                
+                
+                
+                
+            }
+            else{
+                print("error logging in quickblox: \(errorCode.status.rawValue)")
+                DispatchQueue.main.async {
+                    hud.dismiss()
+                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again"), animated: true, completion: nil)
+                }
+            }
+            
+            
+        }
+
+    }
+    
+    
+    func saveUserInUserDefaults(user: User){
+        let userDefaults = UserDefaults.standard
+        let encodedData: Data = NSKeyedArchiver.archivedData(withRootObject: user)
+        
+        userDefaults.set(encodedData, forKey: "user")
+        
+        userDefaults.synchronize()
+    }
 }

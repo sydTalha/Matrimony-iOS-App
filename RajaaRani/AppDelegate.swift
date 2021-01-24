@@ -7,6 +7,8 @@
 import UIKit
 import GoogleSignIn
 import Alamofire
+import Quickblox
+import QuickbloxWebRTC
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
@@ -18,14 +20,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        
+        //google sign-in initializtaions
         GIDSignIn.sharedInstance().clientID = "690010998607-qfr8i70m0vh5pr9loafnf045kmq5lqtk.apps.googleusercontent.com"
         GIDSignIn.sharedInstance().delegate = self
         
         
+        //quickblox initializations
+        QBSettings.applicationID = 88427
+        QBSettings.authKey = "LEUg6gbN2eRhx2C"
+        QBSettings.authSecret = "ZcaZk9kqddDRd7X"
+        QBSettings.accountKey = "wNLrdFxKJ1CfyGBmyzGp"
+        
         return true
     }
 
+    
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        //SocketIOManager.sharedInstance.establishConnection()
+    }
     
     @available(iOS 9.0, *)
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any]) -> Bool {

@@ -99,6 +99,14 @@ extension EmailVerifyVC{
         super.viewDidLoad()
         self.setupInterface()
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToCompleteProfile"{
+            let destVC = segue.destination as! CompleteProfileVC
+            destVC.user = self.user
+        }
+    }
 }
 
 //MARK:- Interface Setup

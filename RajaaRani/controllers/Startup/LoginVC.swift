@@ -44,25 +44,27 @@ class LoginVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func googleTapped(_ sender: Any) {
-        
-        GIDSignIn.sharedInstance()?.presentingViewController = self
-        GIDSignIn.sharedInstance()?.signIn()
-        
-        
-        
-        //Notifications
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "hide_indicator_err"), object: nil, queue: nil,
-        using: self.hide_indicator_notification)
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "show_indicator"), object: nil, queue: nil,
-        using: self.indicator_notification)
-        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "googleSignIn_notification"), object: nil, queue: nil,
-        using: self.notificationReceived)
+        self.present(utils.displayDialog(title: "Disabled", msg: "Please continue with email for now"), animated: true, completion: nil)
+//
+//        GIDSignIn.sharedInstance()?.presentingViewController = self
+//        GIDSignIn.sharedInstance()?.signIn()
+//
+//
+//
+//        //Notifications
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "hide_indicator_err"), object: nil, queue: nil,
+//        using: self.hide_indicator_notification)
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "show_indicator"), object: nil, queue: nil,
+//        using: self.indicator_notification)
+//        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "googleSignIn_notification"), object: nil, queue: nil,
+//        using: self.notificationReceived)
         
         
     }
     
     @IBAction func facebookTapped(_ sender: Any) {
-        performSegue(withIdentifier: "goToSettings", sender: self)
+        self.present(utils.displayDialog(title: "Disabled", msg: "Please continue with email for now"), animated: true, completion: nil)
+        //performSegue(withIdentifier: "goToSettings", sender: self)
     }
     
     
