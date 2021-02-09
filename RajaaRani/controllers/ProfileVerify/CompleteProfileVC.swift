@@ -6,8 +6,7 @@
 //
 
 import UIKit
-import Quickblox
-import QuickbloxWebRTC
+
 
 
 class CompleteProfileVC: UIViewController {

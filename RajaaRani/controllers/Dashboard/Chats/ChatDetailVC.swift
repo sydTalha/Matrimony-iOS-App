@@ -96,151 +96,17 @@ extension ChatDetailVC{
             print(self.chat_id)
             self.initializeClientWithToken(token: self.twilioToken)
         }
-        
-//        SocketIOManager.sharedInstance.connectToServerWithNickname(nickname: user?.email ?? "") { (userList) in
-//            print(userList?.count)
-//        }
+
     }
         
     override func viewDidAppear(_ animated: Bool) {
-//        SocketIOManager.sharedInstance.getChatMessage { (messageInfo) -> Void in
-//
-//            DispatchQueue.global(qos: .background).async {
-//                DispatchQueue.main.async {
-//                    let date = messageInfo["date"] as! String
-//
-//                    let message = Message(id: UUID().uuidString, content: messageInfo["message"] as! String, created: date.convertToTimeInterval(), senderID: "id12", senderName: messageInfo["nickname"] as! String)
-//                    self.messages.append(message)
-//                    self.messagesCollectionView.reloadData()
-//                    self.messagesCollectionView.scrollToBottom(animated: true)
-//                }
-//            }
-//        }
-        
+    
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
         
-        //QBChat.instance.addDelegate(self)
-        
-        
-        
-/*
-        
-//        loginQuickBlox()
-//
-//
-//        let currentUserHalfID = self.stripUserIDs(id: self.user?._id ?? "")
-//
-//        if let id = UInt.parse(from: currentUserHalfID) {
-//
-//
-//            QBSettings.autoReconnectEnabled = true
-//            QBSettings.reconnectTimerInterval = 5
-//            QBSettings.carbonsEnabled = true
-//            QBSettings.keepAliveInterval = 20
-//            QBSettings.streamManagementSendMessageTimeout = 0
-//            QBSettings.networkIndicatorManagerEnabled = false
-//
-////            let currentUser = QBUUser()
-////            currentUser.id = id
-////            currentUser.password = self.user?._id ?? ""
-//
-//            QBRequest.user(withEmail: self.user?.email ?? "") { (response, qbCurrUser) in
-//                if response.isSuccess{
-//                    self.currentQBUser = qbCurrUser
-//                    self.currentQBUser.password = self.user?._id ?? ""
-//                    QBRequest.user(withEmail: self.otherUser?.email ?? "") { (resp, qbOtherUser) in
-//                        if resp.isSuccess{
-//                            self.otherQBUser = qbOtherUser
-//                            self.otherQBUser.password = self.otherUser?._id ?? ""
-//                            QBChat.instance.connect(withUserID: self.otherQBUser.id, password: self.otherQBUser.password ?? "", completion: { (error) in
-//                                if error != nil{
-//                                    print("error connecting to chat: \(error)")
-//                                }
-//                                else{
-//
-//                                    if self.dialog.occupantIDs?.contains(NSNumber(integerLiteral: Int(self.otherQBUser.id))) ?? false{
-//
-//                                    }
-//                                    else{
-//                                        self.dialog.occupantIDs = [NSNumber(integerLiteral: Int(self.otherQBUser.id))]
-//                                    }
-//
-//                                    print(self.dialog.occupantIDs)
-//                                    QBRequest.createDialog(self.dialog, successBlock: { (response, createdDialog) in
-//                                        if response.isSuccess{
-//                                            self.chatDialog = createdDialog
-//                                        }
-//                                        else{
-//                                            print("error creating dialog: \(response)")
-//                                        }
-//
-//                                    }, errorBlock: { (response) in
-//                                        print("error init chat: \(response)")
-//                                    })
-//                                }
-//                            })
-//
-//
-//
-//
-//
-//                        }
-//                    } errorBlock: { (errResponse) in
-//                        print("error fetching other user: \(errResponse)")
-//                    }
-//
-//
-//                }
-//            } errorBlock: { (err) in
-//                print("error fetching user: \(err)")
-//            }
-//
-//
-//
-//
-//            let otherUserHalfID = self.stripUserIDs(id: self.otherUser?._id ?? "")
-//
-//
-//
-//
-//            if let otherUserID = UInt.parse(from: otherUserHalfID){
-//
-//            }
-//
-//
-//        }
-        
-        
-        
-
-        
-        
-//        agora = AgoraRtmKit.init(appId: "c38108fcd58b4d40b01d4d0d9223c87a", delegate: self)
-//        agora?.login(byToken: "18ca0a9ff5b14abf84bb2e5d4248089c", user: self.user?.email ?? "", completion: { (errorCode) in
-//            if errorCode != AgoraRtmLoginErrorCode.ok{
-//                print("login failed \(errorCode) ")
-//            }
-//            else{
-//                print("login success, continue to chat")
-//
-//            }
-//        })
-        
-
-        
-        
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "handleConnectedUserUpdateNotification"), object: nil, queue: nil,
-//        using: self.handleConnectedUserUpdateNotification)
-//
-//        NotificationCenter.default.addObserver(forName: NSNotification.Name(rawValue: "handleDisconnectedUserUpdateNotification"), object: nil, queue: nil,
-//        using: self.handleDisconnectedUserUpdateNotification)
-        
-//        NotificationCenter.default.addObserver(self, selector: Selector(("handleConnectedUserUpdateNotification:")), name: NSNotification.Name(rawValue: "userWasConnectedNotification"), object: nil)
-//        NotificationCenter.default.addObserver(self, selector: Selector(("handleDisconnectedUserUpdateNotification:")), name: NSNotification.Name(rawValue: "userWasDisconnectedNotification"), object: nil)  */
 
     }
     
@@ -258,11 +124,6 @@ extension ChatDetailVC{
         if isConnected{
             
         }
-        
-//        let message = Message(id: UUID().uuidString, content: "First message text", created: Date().timeIntervalSince1970, senderID: "id12", senderName: "harry")
-        
-//        self.messagesCollectionView.reloadData()
-//        self.messages.append(message)
         
     }
     
@@ -309,15 +170,7 @@ extension ChatDetailVC: InputBarAccessoryViewDelegate, MessagesDataSource, Messa
         }
         
     }
-    
-//    func messageBottomLabelAttributedText(for message: MessageType, at indexPath: IndexPath) -> NSAttributedString? {
-//        if message.sender.senderId == sender?.senderId{
-//            return NSAttributedString(string: "Read", attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 10), NSAttributedString.Key.foregroundColor: UIColor.darkGray])
-//        }
-//        return nil
-//    }
-    
-    
+        
     func currentSender() -> SenderType {
         return sender!
     }
@@ -564,10 +417,6 @@ extension ChatDetailVC{
                 
                 
                 
-                
-                
-                
-                
             }
             else{
                 self.present(utils.displayDialog(title: "Error", msg: "Error fetching channels list"), animated: true, completion: nil)
@@ -679,18 +528,7 @@ extension ChatDetailVC{
                        }
                    }
                }
-               
-               
-               // sort the descriptors
-//               let sortSelector = #selector(NSString.localizedCaseInsensitiveCompare(_:))
-//               let descriptor = NSSortDescriptor(key: "friendlyName", ascending: true, selector: sortSelector)
-//               newChannelDescriptors.sort(using: [descriptor])
-                
-               //self.channelDescriptors = newChannelDescriptors
-               
-//               if let delegate = self.delegate {
-//                   delegate.reloadChannelDescriptorList()
-//               }
+              
                            
             })
         })

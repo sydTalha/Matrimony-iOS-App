@@ -24,6 +24,7 @@ class User: NSObject, NSCoding{
     var job: String = ""
     var phone: String = ""
     var isCompleted: Bool = false
+    var chatids: [String] = [String]()
     
     func encode(with coder: NSCoder) {
         coder.encode(_id, forKey: "_id")
@@ -40,6 +41,7 @@ class User: NSObject, NSCoding{
         coder.encode(job, forKey: "job")
         coder.encode(phone, forKey: "phone")
         coder.encode(isCompleted, forKey: "isCompleted")
+        coder.encode(chatids, forKey: "chatids")
     }
     
     required convenience init(coder aDecoder: NSCoder) {
@@ -57,11 +59,12 @@ class User: NSObject, NSCoding{
         let job = aDecoder.decodeObject(forKey: "job") as! String
         let phone = aDecoder.decodeObject(forKey: "phone") as! String
         let isCompleted = aDecoder.decodeBool(forKey: "isCompleted")
-        self.init(_id: _id, email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+        let chatids = aDecoder.decodeObject(forKey: "chatids") as! [String]
+        self.init(_id: _id, email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: chatids)
     }
     
     
-    init(_id: String, email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool) {
+    init(_id: String, email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool, chatids: [String]) {
         self._id = _id
         self.email = email
         self.DOB = DOB
@@ -76,6 +79,7 @@ class User: NSObject, NSCoding{
         self.job = job
         self.phone = phone
         self.isCompleted = isCompleted
+        self.chatids = chatids
     }
 
 }

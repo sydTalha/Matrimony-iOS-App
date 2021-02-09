@@ -10,8 +10,8 @@ import AVFoundation
 import Alamofire
 import SwiftyJSON
 import JGProgressHUD
-import Quickblox
-import QuickbloxWebRTC
+import TwilioChatClient
+
 
 class EmailVC: UIViewController {
 
@@ -20,6 +20,12 @@ class EmailVC: UIViewController {
     var queuePlayer: AVQueuePlayer?
     var looper: AVPlayerLooper?
     var user: User?
+    
+    //MARK:- Twilio Properties
+    var twilioClient: TwilioChatClient?
+    var channelList: TCHChannels?
+    var userChannelList = [TCHChannel]()
+    var twilioObj: TwilioClient = TwilioClient()
     
     //MARK:- Outlets
     @IBOutlet weak var report_view: UIView!
@@ -106,7 +112,7 @@ extension EmailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
+        user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -223,20 +229,36 @@ extension EmailVC{
             else if responseCode == 200{
                 self.user = self.parseUserObj(result: result)
                 
-                
-                //sign in quickblox
-                if self.user?.isCompleted ?? false{
-                    //self.loginQuickBlox(hud: hud)
-                    self.saveUserInUserDefaults(user: self.user!)
-                    
-                    self.performSegue(withIdentifier: "goToDashboard", sender: self)
+                if let currUser = self.user{
+                    if currUser.isCompleted{
+                        
+                        self.fetchTwilioTokenFromAPI(username: currUser._id) { (token) in
+                            print(token)
+                            
+                            self.initializeClientWithToken(token: token) {
+                                print("initialized")
+                                
+                                //save to User Defs and segue
+                                self.saveUserInUserDefaults(user: currUser)
+                                
+                                //post notification to chat detail VC
+                                
+                                let notifDict = ["twilio": self.twilioObj]
+                                NotificationCenter.default.post(name: .twilioDataNotificationKey, object: nil, userInfo: notifDict)
+                                
+                                self.performSegue(withIdentifier: "goToDashboard", sender: self)
+                                
+                            }
+                            
+                        }
+                        
+                    }
+                    else{
+                        hud.dismiss()
+                        self.saveUserInUserDefaults(user: currUser)
+                        self.performSegue(withIdentifier: "goToDashboard", sender: self)
+                    }
                 }
-                else{
-                    hud.dismiss()
-                    self.saveUserInUserDefaults(user: self.user!)
-                    self.performSegue(withIdentifier: "goToDashboard", sender: self)
-                }
-                
                 
             }
             else{
@@ -261,7 +283,7 @@ extension EmailVC{
         let lon = result["location"]["coords"]["lon"].doubleValue
         let isCompleted = result["isCompleted"].boolValue
         
-        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted)
+        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted, chatids: [])
         
         if isCompleted{
             userDb.nickname = result["nickname"].stringValue
@@ -269,96 +291,16 @@ extension EmailVC{
             userDb.ethnic = result["ethnic"].stringValue
             userDb.job = result["job"].stringValue
             userDb.phone = result["phone"].stringValue
+            let chatids = result["chat_ids"].arrayValue
+            var idArr = [String]()
+            for id in chatids{
+                idArr.append(id.stringValue)
+            }
+            userDb.chatids = idArr
         }
         
         return userDb
     }
-    
-    
-    func loginQuickBlox(hud: JGProgressHUD){
-        
-        QBRequest.logIn(withUserEmail: self.user?.email ?? "", password: self.user?._id ?? "") { (response, userResp) in
-            hud.dismiss()
-            
-            self.saveUserInUserDefaults(user: self.user!)
-            
-            self.performSegue(withIdentifier: "goToDashboard", sender: self)
-        } errorBlock: { (errorCode) in
-            
-            if errorCode.status.rawValue == 401{
-                //need to register user
-                print("here in register \(self.user?._id ?? "")")
-                let userQB = QBUUser()
-                if let user1 = self.user{
-                    var count = 0
-                    var halfID = ""
-                    for val in user1._id{
-                        if count == user1._id.count / 2{
-                            break
-                        }
-                        else{
-                            halfID = halfID + String(val)
-                        }
-                        count = count + 1
-                    }
-                    
-                    if let id = UInt.parse(from: halfID) {
-                        userQB.id = id
-                        
-                        userQB.email = user1.email
-                        userQB.fullName = user1.nickname
-                        userQB.password = user1._id
-                        print("here")
-                        
-                        QBRequest.signUp(userQB) { (response, userQBResponse) in
-                            //success
-                            
-                            if response.isSuccess{
-                                hud.dismiss()
-                                
-                                
-                            }
-                            else{
-                                print(response.error)
-                                DispatchQueue.main.async {
-                                    hud.dismiss()
-                                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again, if issue presists then contact support"), animated: true, completion: nil)
-                                }
-                            }
-                            
-                        } errorBlock: { (errorCode) in
-                            print("signup error: \(errorCode)")
-                            
-                            DispatchQueue.main.async {
-                                hud.dismiss()
-                                self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again"), animated: true, completion: nil)
-                            }
-                        }
-
-                    }
-                    
-                }
-                
-                
-                
-                
-                
-                
-                
-            }
-            else{
-                print("error logging in quickblox: \(errorCode.status.rawValue)")
-                DispatchQueue.main.async {
-                    hud.dismiss()
-                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong, please try again"), animated: true, completion: nil)
-                }
-            }
-            
-            
-        }
-
-    }
-    
     
     func saveUserInUserDefaults(user: User){
         let userDefaults = UserDefaults.standard
@@ -367,5 +309,188 @@ extension EmailVC{
         userDefaults.set(encodedData, forKey: "user")
         
         userDefaults.synchronize()
+    }
+    
+    func fetchTwilioTokenFromAPI(username: String, completion: @escaping (String)->()){
+        let hud = JGProgressHUD(style: .dark)
+        hud.show(in: self.view)
+        let params = ["username": username]
+        AF.request(config.getTwilioTokenURL, method: .get, parameters: params, encoding: URLEncoding.default).responseJSON { (response) in
+            let responseCode = response.response?.statusCode ?? 0
+            
+            let result = JSON(response.value)
+            print(response)
+            if responseCode >= 400 && responseCode <= 499{
+                hud.dismiss()
+                self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while fetching Twilio token"), animated: true, completion: nil)
+            }
+            else{
+                hud.dismiss()
+                let token = result.stringValue
+                completion(token)
+            }
+        }
+    }
+    
+    func initializeClientWithToken(token: String, completion: @escaping ()->()){
+        
+        TwilioChatClient.setLogLevel(.critical)
+        
+        TwilioChatClient.chatClient(withToken: token, properties: nil, delegate: self) { result, chatClient in
+            print(chatClient)
+            guard (result.isSuccessful()) else {
+                print(result)
+                return
+            }
+            print("here")
+            self.twilioClient = chatClient
+            print("early: \(self.twilioClient?.channelsList()?.subscribedChannels().count)")
+            self.twilioObj.client = chatClient
+            if let client = chatClient{
+                if let channels = client.channelsList(){
+                    self.twilioObj.channelList = channels.subscribedChannels()
+                    channels.userChannelDescriptors { (res, paginator) in
+                        if res.isSuccessful(){
+                            //get paginator
+                            if let paginatorItems = paginator{
+                                for item in paginatorItems.items(){
+                                    if let channelName = item.friendlyName{
+                                        if channelName.contains(self.user?.email ?? ""){
+                                            print(channelName)
+                                            self.twilioObj.channelDescriptors.append(item)
+                                        }
+                                    }
+                                }
+                                print(self.twilioObj.channelDescriptors.count)
+                                completion()
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            
+//            //UIApplication.shared.isNetworkActivityIndicatorVisible = true
+//            self.isConnected = true
+//            self.client = chatClient
+//
+//
+//            self.setupChatChannel { (channel) in
+//                self.currentChannel = channel
+//            }
+        }
+    }
+    
+}
+
+extension EmailVC: TwilioChatClientDelegate{
+    
+    func chatClient(_ client: TwilioChatClient, connectionStateUpdated state: TCHClientConnectionState) {
+        if state == .error || state == .fatalError{
+            print("error occurred while connecting")
+        }
+    }
+    
+    func chatClient(_ client: TwilioChatClient, channel: TCHChannel, synchronizationStatusUpdated status: TCHChannelSynchronizationStatus) {
+        
+        print("in sync")
+        if status == .all {
+            print("all: \(status.rawValue)")
+            self.channelList = twilioClient?.channelsList()
+            
+            let chatClient = TwilioClient()
+            
+            self.channelList?.userChannelDescriptors(completion: { (result, paginator) in
+                if result.isSuccessful(){
+                    //print(paginator?.items().count)
+                    if let currUser = self.user{
+//                        let myGroup = DispatchGroup()
+//                        myGroup.enter()
+//                        if let paginator = paginator{
+//                            chatClient.channelDescriptors = paginator.items()
+//                        }
+////                        for page in paginator?.items() ?? [TCHChannelDescriptor](){
+////                            if let channelName = page.friendlyName{
+////                                print(channelName)
+//////                                if channelName.contains(currUser.email) && channelName.contains("unaveed97@gmail.com"){
+//////                                    page.channel { (result, channel) in
+//////
+//////                                        if result.isSuccessful(){
+//////                                            channel?.destroy(completion: { (result) in
+//////                                                if result.isSuccessful(){
+//////                                                    print("deleted")
+//////                                                }
+//////                                                else{
+//////                                                    print(result.error)
+//////                                                }
+//////                                            })
+//////                                        }
+//////
+//////                                    }
+//////                                }
+////
+////                                if currUser.chatids.contains(channelName){
+////
+////
+////                                    page.channel { (result, channel) in
+////                                        if result.isSuccessful(){
+////                                            if let channel = channel{
+////                                                self.userChannelList.append(channel)
+////
+////                                            }
+////                                        }
+////                                        else{
+////                                            self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while initializing chat channels"), animated: true, completion: nil)
+////                                        }
+////
+////                                    }
+////
+////
+////                                }
+////                            }
+////                        }
+//
+//
+//                        chatClient.channelList = self.userChannelList
+//                        print("channel list: ", chatClient.channelDescriptors.count)
+//                        chatClient.client = self.twilioClient
+//
+                        
+                        
+                        
+                    }
+                    
+                }
+                else{
+                    self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while initializing chat channels"), animated: true, completion: nil)
+                }
+                
+            })
+            
+        }
+        else if status == .identifier{
+            print("identifier: \(status.rawValue)")
+            self.channelList = client.channelsList()
+            
+            //self.joinChannel()
+        }
+        else if status == .metadata{
+            print("metadata: \(status.rawValue)")
+            self.channelList = twilioClient?.channelsList()
+            
+            
+            
+            
+        }
+        else if status == .failed{
+            print("failed: \(status.rawValue)")
+        }
+        else if status == .none{
+            print("none: \(status.rawValue)")
+        }
+        else{
+            print("error syncing \(status.rawValue)")
+        }
     }
 }

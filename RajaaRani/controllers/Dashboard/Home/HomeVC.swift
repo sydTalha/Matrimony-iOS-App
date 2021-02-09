@@ -346,7 +346,6 @@ extension HomeVC{
     }
     
     
-    
     func setupEventHandlers(){
         let likeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(likeTapped(tapGestureRecognizer:)))
             like_view.isUserInteractionEnabled = true
@@ -367,7 +366,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false)
+        var user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [])
         if !dbUsers.isEmpty{
             user = dbUsers[kolodaIndex]
         }
@@ -599,7 +598,7 @@ extension HomeVC{
                             let ethnic = user["ethnic"].stringValue
                             let job = user["job"].stringValue
                             let phone = user["phone"].stringValue
-                            let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+                            let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [])
                             self.dbUsers.append(userObj)
                             
                             

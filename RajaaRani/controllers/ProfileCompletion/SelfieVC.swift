@@ -273,7 +273,7 @@ extension SelfieVC{
         let ethnic = result["ethnic"].stringValue
         let job = result["job"].stringValue
         let phone = result["phone"].stringValue
-        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [])
         
         return userObj
     }

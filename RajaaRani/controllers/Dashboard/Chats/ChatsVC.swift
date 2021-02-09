@@ -30,6 +30,16 @@ class ChatsVC: UIViewController {
 
 }
 
+//MARK:- Notifications
+extension ChatsVC{
+    @objc func getTwilioObj(_ notification: NSNotification) {
+
+     if let image = notification.userInfo?["image"] as? UIImage {
+     // do something with your image
+     }
+    }
+}
+
 //MARK:- Lifecycle
 extension ChatsVC{
     
@@ -69,6 +79,11 @@ extension ChatsVC{
         let vc = self.tabBarController?.viewControllers![0] as! HomeVC
         self.user = vc.user
         tableView.tableFooterView = UIView()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.getTwilioObj(_:)), name: .twilioDataNotificationKey, object: nil)
+
+        
+        
     }
     
     
@@ -151,7 +166,7 @@ extension ChatsVC{
                         let ethnic = user["ethnic"].stringValue
                         let job = user["job"].stringValue
                         let phone = user["phone"].stringValue
-                        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted)
+                        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [])
                         self.matchedUsers.append(userObj)
                         
                     }
@@ -193,4 +208,7 @@ extension ChatsVC{
             }
         }
     }
+    
+    
+    
 }
