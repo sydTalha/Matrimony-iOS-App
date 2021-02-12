@@ -12,6 +12,7 @@ import JGProgressHUD
 import SwiftyJSON
 import CoreLocation
 import AVFoundation
+import TwilioChatClient
 
 class HomeVC: UIViewController {
 
@@ -28,6 +29,8 @@ class HomeVC: UIViewController {
     var playerLayer: AVPlayerLayer?
     var queuePlayer: AVQueuePlayer?
     var looper: AVPlayerLooper?
+    var hud: JGProgressHUD = JGProgressHUD(style: .dark)
+    var twilioClient: TwilioClient = TwilioClient()
     
     //MARK:- Outlets
     @IBOutlet weak var tableView: UITableView!
@@ -103,36 +106,22 @@ extension HomeVC{
     
     
     override func viewDidAppear(_ animated: Bool) {
-        //self.cardStack_main.reloadData()
-        //cardView.reloadData()
-        //unhideLikeDislikeViews()
+        
     }
     override func viewWillAppear(_ animated: Bool) {
-        //loadProfiles()
-        //self.cardStack_main.reloadData()
-        //cardView.reloadData()
-        //unhideLikeDislikeViews()
-        //load user obj from prefs
-        let userDefaults = UserDefaults.standard
-        let decoded  = userDefaults.data(forKey: "user")
-        if decoded != nil{
-            let decodedUser = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as? User
-            
-            if decodedUser != nil{
-                self.user = decodedUser
-                
-            }
+        print("in appear")
+        
+        if self.user?.isCompleted ?? false{
+            self.tabBarController?.tabBar.isUserInteractionEnabled = false
         }
         
-        else{
-            
-        }
         
         
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         self.setupInterface()
         
         tableView.delegate = self
@@ -170,6 +159,10 @@ extension HomeVC{
 //        }
         
         
+        
+        if self.user?.isCompleted ?? false{
+            self.setupTwilioChatChannels()
+        }
         self.cardView.cornerRadius = 13
         self.cardView.setCardView()
         self.cardView.countOfVisibleCards = 2
@@ -356,8 +349,62 @@ extension HomeVC{
             dislike_view.addGestureRecognizer(dislikeTapGestureRecognizer)
     }
     
+    func setupTwilioChatChannels(){
+        let userDefaults = UserDefaults.standard
+        let decoded  = userDefaults.data(forKey: "user")
+        if decoded != nil{
+            let decodedUser = NSKeyedUnarchiver.unarchiveObject(with: decoded!) as? User
+            
+            if decodedUser != nil{
+                self.user = decodedUser
+                
+                //fetching twilio token only when user is logged in
+                TwilioManager.fetchTokenFromAPI(username: self.user?._id ?? "") { (token) in
+                    if token == "" {
+                        self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while fetching Twilio token"), animated: true, completion: nil)
+                    }
+                    else{
+                        print(token)
+                        self.initializeClientWithToken(token: token) {
+                            print(self.twilioClient.channelDescriptors.count)
+                        }
+                        
+                    }
+                }
+                
+                DispatchQueue.global(qos: .background).async {
+                    
+                }
+            }
+        }
+        
+        else{
+            
+        }
+    }
+    
 }
 
+
+//MARK:- Twilio Chat Delegate
+extension HomeVC: TwilioChatClientDelegate{
+    func chatClient(_ client: TwilioChatClient, synchronizationStatusUpdated status: TCHClientSynchronizationStatus) {
+        if status == .channelsListCompleted{
+            print("channel list available: \(client.channelsList()?.subscribedChannels().count)")
+        }
+        if status == .started{
+            print("started")
+        }
+        if status == .completed{
+            print("completed \(client.channelsList()?.subscribedChannels().count)")
+            
+        }
+        if status == .failed{
+            print("failed")
+            self.present(utils.displayDialog(title: "Oops", msg: "Twilio API Failed"), animated: true, completion: nil)
+        }
+    }
+}
 
 //MARK:- TableView Datasource, Delegates
 extension HomeVC: UITableViewDelegate, UITableViewDataSource{
@@ -495,13 +542,30 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
 //
 //        self.setTextAnimation(label: username_Age_lbl, text: swipeUser.nickname)
         if direction == .left{
-            print("swipe left")
-            self.swipeLeftAPI(userEmail: self.user?.email ?? "", profileEmail: swipeUser.email, koloda: koloda)
+            if self.user?.isCompleted ?? false{
+                print("swipe left")
+                self.swipeLeftAPI(userEmail: self.user?.email ?? "", profileEmail: swipeUser.email, koloda: koloda)
+            }
+            else{
+                koloda.revertAction(direction: .left)
+                koloda.reloadData()
+                self.showCompleteProfileVC()
+            }
+            
             
         }
         else if direction == .right{
             print("swipe right ")
-            swipeRightAPI(userEmail: self.user?.email ?? "", profileEmail: swipeUser.email, koloda: koloda)
+            if self.user?.isCompleted ?? false{
+                swipeRightAPI(userEmail: self.user?.email ?? "", profileEmail: swipeUser.email, koloda: koloda)
+            }
+            else{
+                //revert and show complete your profile screen
+                koloda.revertAction(direction: .right)
+                koloda.reloadData()
+                self.showCompleteProfileVC()
+            }
+            
         }
     }
 
@@ -510,9 +574,15 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
     }
     
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.hideLikeDislikeViews()
+        print(koloda.isRunOutOfCards)
+        if dbUsers.count == 0{
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                self.hideLikeDislikeViews()
+            }
         }
+        
+        
+        
         
     }
 
@@ -531,9 +601,10 @@ extension HomeVC: CLLocationManagerDelegate{
         location.fetchCityAndCountry { city, country, error in
             guard let city = city, let country = country, error == nil else { return }
             print(city + ", " + country)
-            self.user?.city = city.lowercased()
+            //self.user?.city = city.lowercased()
             self.user?.country = country.lowercased()
             self.loadProfiles()
+            
         }
         
         
@@ -554,8 +625,7 @@ extension HomeVC{
     
     func loadProfiles(){
         self.dbUsers.removeAll()
-        let hud = JGProgressHUD(style: .dark)
-        hud.show(in: self.view)
+        
         let params = ["email": self.user?.email ?? "",
                       "gender": self.user?.gender ?? "",
                       "city": self.user?.city ?? "",
@@ -567,7 +637,7 @@ extension HomeVC{
             if responseCode >= 400 && responseCode <= 499{
                 let errorMsg = result["message"].stringValue
                 DispatchQueue.main.async {
-                    hud.dismiss()
+                    //self.hud.dismiss()
                     self.present(utils.displayDialog(title: "Oops", msg: errorMsg), animated: true, completion: nil)
                 }
             
@@ -578,7 +648,7 @@ extension HomeVC{
                     
                     let userArr = result.array!
                     if userArr.count == 0{
-                        hud.dismiss()
+                        //self.hud.dismiss()
                         self.hideLikeDislikeViews()
                     }
                     else{
@@ -611,10 +681,13 @@ extension HomeVC{
                     //self.cardStack_main.reloadData()
                 }
                 DispatchQueue.main.async {
-                    hud.dismiss()
+                    //self.hud.dismiss()
                     
                     //self.unhideLikeDislikeViews()
                 }
+            }
+            else{
+                self.present(utils.displayDialog(title: "API Timeout", msg: "An error occurred with Backend API"), animated: true, completion: nil)
             }
         }
     }
@@ -726,6 +799,69 @@ extension HomeVC{
         //allViewsToFront()
     }
     
+    func initializeClientWithToken(token: String, completion: @escaping ()->()){
+        
+        TwilioChatClient.setLogLevel(.critical)
+        hud.show(in: self.view)
+        
+        TwilioChatClient.chatClient(withToken: token, properties: nil, delegate: self) { result, chatClient in
+            print(chatClient)
+            guard (result.isSuccessful()) else {
+                print(result.resultText)
+                return
+            }
+            print("here")
+            
+            //print("early: \(self.twilioClient?.channelsList()?.subscribedChannels().count)")
+            
+            if let client = chatClient{
+                self.twilioClient.client = client
+                if let channels = client.channelsList(){
+                    self.twilioClient.channelList = channels.subscribedChannels()
+                    if self.twilioClient.channelList.count == 0{
+                        
+                        //no channels exists
+                        self.hud.dismiss()
+                        self.tabBarController?.tabBar.isUserInteractionEnabled = true
+                        completion()
+                        
+                    }
+                    else{
+                        channels.userChannelDescriptors { (res, paginator) in
+                            if res.isSuccessful(){
+                                //get paginator
+                                if let paginatorItems = paginator{
+                                    for item in paginatorItems.items(){
+                                        if let channelName = item.friendlyName{
+                                            if channelName.contains(self.user?.email ?? ""){
+                                                print(channelName)
+                                                self.twilioClient.channelDescriptors.append(item)
+                                            }
+                                        }
+                                    }
+                                    self.hud.dismiss()
+                                    self.tabBarController?.tabBar.isUserInteractionEnabled = true
+                                    completion()
+                                }
+                            }
+                            else{
+                                self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while getting chat channels"), animated: true, completion: nil)
+                            }
+                        }
+                    }
+                }
+            }
+            
+        }
+    }
+    
+    func showCompleteProfileVC(){
+        let profileStoryboard = UIStoryboard.init(name: "ProfileVerification", bundle: nil)
+        let completeVC = profileStoryboard.instantiateViewController(identifier: "complete_profile_vc") as! CompleteProfileVC
+        completeVC.from = 1
+        completeVC.modalPresentationStyle = .fullScreen
+        self.present(completeVC, animated: true, completion: nil)
+    }
     
 }
 

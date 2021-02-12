@@ -105,6 +105,7 @@ extension EmailVerifyVC{
         if segue.identifier == "goToCompleteProfile"{
             let destVC = segue.destination as! CompleteProfileVC
             destVC.user = self.user
+            destVC.from = 0
         }
     }
 }

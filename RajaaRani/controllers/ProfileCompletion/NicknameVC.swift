@@ -11,7 +11,7 @@ class NicknameVC: UIViewController {
 
     //MARK:- Properties
     var user: User?
-    
+    var from = 0
     //MARK:- Outlets
     
     @IBOutlet weak var bgCardView: UIView!
@@ -38,7 +38,13 @@ class NicknameVC: UIViewController {
     
     @IBAction func backBtnTapped(_ sender: UIButton) {
         //self.navigationController?.popViewController(animated: true)
-        performSegue(withIdentifier: "goToDashboard", sender: self)
+        if from == 1{
+            self.dismiss(animated: true, completion: nil)
+        }
+        else{
+            performSegue(withIdentifier: "goToDashboard", sender: self)
+        }
+        
     }
     
 

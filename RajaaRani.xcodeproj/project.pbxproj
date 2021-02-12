@@ -63,6 +63,7 @@
 		65EFA8DE25A4BE5300BD1751 /* EthnicVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFA8DD25A4BE5300BD1751 /* EthnicVC.swift */; };
 		65EFA8E225A4C7CF00BD1751 /* EthnicCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFA8E125A4C7CF00BD1751 /* EthnicCell.swift */; };
 		65EFA8E625A4DAC100BD1751 /* JobVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65EFA8E525A4DAC100BD1751 /* JobVC.swift */; };
+		65F5303A25D3CCEB0005B35C /* TwilioManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5303925D3CCEB0005B35C /* TwilioManager.swift */; };
 		65F5E0A625A36D7F0016B977 /* CompleteProfileVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F5E0A525A36D7F0016B977 /* CompleteProfileVC.swift */; };
 /* End PBXBuildFile section */
 
@@ -126,6 +127,7 @@
 		65EFA8DD25A4BE5300BD1751 /* EthnicVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthnicVC.swift; sourceTree = "<group>"; };
 		65EFA8E125A4C7CF00BD1751 /* EthnicCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthnicCell.swift; sourceTree = "<group>"; };
 		65EFA8E525A4DAC100BD1751 /* JobVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JobVC.swift; sourceTree = "<group>"; };
+		65F5303925D3CCEB0005B35C /* TwilioManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioManager.swift; sourceTree = "<group>"; };
 		65F5E0A525A36D7F0016B977 /* CompleteProfileVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompleteProfileVC.swift; sourceTree = "<group>"; };
 		845866F6891F120369F0B68D /* Pods-RajaaRani.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.debug.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.debug.xcconfig"; sourceTree = "<group>"; };
 		B4C3E1CDF18CFDF5A9EEAADD /* Pods-RajaaRani.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RajaaRani.release.xcconfig"; path = "Target Support Files/Pods-RajaaRani/Pods-RajaaRani.release.xcconfig"; sourceTree = "<group>"; };
@@ -275,6 +277,7 @@
 				65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */,
 				65040C9F25962E07005D0550 /* Utilities.swift */,
 				65DDE9BF25AF3C7A00E3C867 /* SocketIOManager.swift */,
+				65F5303925D3CCEB0005B35C /* TwilioManager.swift */,
 			);
 			path = helpers;
 			sourceTree = "<group>";
@@ -570,6 +573,7 @@
 				65040CA025962E07005D0550 /* Utilities.swift in Sources */,
 				65A843EF259F67F700A75EBD /* SettingsMainVC.swift in Sources */,
 				65A843EC259F65DF00A75EBD /* BtnSectionCell.swift in Sources */,
+				65F5303A25D3CCEB0005B35C /* TwilioManager.swift in Sources */,
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
 				65DDE9C025AF3C7A00E3C867 /* SocketIOManager.swift in Sources */,
 				65ADED6925BADE7800C893AA /* UserStatsFirstCell.swift in Sources */,

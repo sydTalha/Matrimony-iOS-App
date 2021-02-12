@@ -20,6 +20,7 @@ class ChatsVC: UIViewController {
     
     var matchedUsers = [User]()
     var chatids = [String]()
+    var twilioClient: TwilioClient = TwilioClient()
     //MARK:- Outlets
     @IBOutlet weak var tableView: UITableView!
     
@@ -33,10 +34,11 @@ class ChatsVC: UIViewController {
 //MARK:- Notifications
 extension ChatsVC{
     @objc func getTwilioObj(_ notification: NSNotification) {
-
-     if let image = notification.userInfo?["image"] as? UIImage {
-     // do something with your image
-     }
+        print("twilio notifi")
+        if let twilioObj = notification.userInfo?["twilio"] as? TwilioClient {
+            //self.twilioClient = twilioObj
+            //print("channel list: \(twilioClient.channelList.count)")
+        }
     }
 }
 
@@ -45,6 +47,9 @@ extension ChatsVC{
     
     override func viewDidAppear(_ animated: Bool) {
         self.matchedUsers.removeAll()
+        
+        //NotificationCenter.default.addObserver(self, selector: #selector(self.getTwilioObj(_:)), name: .twilioDataNotificationKey, object: nil)
+        
         fetchUsersFromAPI { (result) in
             if result{
                 self.fetchChatIDFromAPI { (res) in
@@ -59,6 +64,7 @@ extension ChatsVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         self.setupInterface()
+        
         
     }
     
@@ -78,9 +84,11 @@ extension ChatsVC{
     func setupInterface(){
         let vc = self.tabBarController?.viewControllers![0] as! HomeVC
         self.user = vc.user
+        
+        self.twilioClient = vc.twilioClient
+        print("channel list \(twilioClient.channelList)")
         tableView.tableFooterView = UIView()
         
-        NotificationCenter.default.addObserver(self, selector: #selector(self.getTwilioObj(_:)), name: .twilioDataNotificationKey, object: nil)
 
         
         

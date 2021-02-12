@@ -13,6 +13,7 @@ class CompleteProfileVC: UIViewController {
 
     //MARK:- Properties
     var user: User?
+    var from = 0
     
     //MARK:- Outlets
     
@@ -23,12 +24,18 @@ class CompleteProfileVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func createProfileTapped(_ sender: UIButton) {
+        
         performSegue(withIdentifier: "goToNickname", sender: self)
     }
     
     @IBAction func laterBtnTapped(_ sender: UIButton) {
         
-        performSegue(withIdentifier: "goToDashboard", sender: self)
+        if from == 0{
+            performSegue(withIdentifier: "goToDashboard", sender: self)
+        }
+        else if from == 1{
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     //MARK:- Event Handlers
@@ -43,6 +50,14 @@ extension CompleteProfileVC{
         self.setupInterface()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToNickname"{
+            if from == 1{
+                let destVC = segue.destination as! NicknameVC
+                destVC.from = 1
+            }
+        }
+    }
 }
 
 //MARK:- Interface Setup
