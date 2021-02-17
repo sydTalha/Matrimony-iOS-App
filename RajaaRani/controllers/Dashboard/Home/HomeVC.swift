@@ -111,12 +111,6 @@ extension HomeVC{
     override func viewWillAppear(_ animated: Bool) {
         print("in appear")
         
-        if self.user?.isCompleted ?? false{
-            self.tabBarController?.tabBar.isUserInteractionEnabled = false
-        }
-        
-        
-        
     }
     
     override func viewDidLoad() {
@@ -161,6 +155,8 @@ extension HomeVC{
         
         
         if self.user?.isCompleted ?? false{
+            self.tabBarController?.tabBar.isUserInteractionEnabled = false
+
             self.setupTwilioChatChannels()
         }
         self.cardView.cornerRadius = 13
@@ -389,6 +385,7 @@ extension HomeVC{
 //MARK:- Twilio Chat Delegate
 extension HomeVC: TwilioChatClientDelegate{
     func chatClient(_ client: TwilioChatClient, synchronizationStatusUpdated status: TCHClientSynchronizationStatus) {
+        
         if status == .channelsListCompleted{
             print("channel list available: \(client.channelsList()?.subscribedChannels().count)")
         }
@@ -413,7 +410,7 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        var user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [])
+        var user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [], matches: [])
         if !dbUsers.isEmpty{
             user = dbUsers[kolodaIndex]
         }
@@ -557,7 +554,7 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
         else if direction == .right{
             print("swipe right ")
             if self.user?.isCompleted ?? false{
-                swipeRightAPI(userEmail: self.user?.email ?? "", profileEmail: swipeUser.email, koloda: koloda)
+                swipeRightAPI(userEmail: self.user?.email ?? "", cardUser: swipeUser, koloda: koloda)
             }
             else{
                 //revert and show complete your profile screen
@@ -649,6 +646,7 @@ extension HomeVC{
                     let userArr = result.array!
                     if userArr.count == 0{
                         //self.hud.dismiss()
+                        print("no users")
                         self.hideLikeDislikeViews()
                     }
                     else{
@@ -668,7 +666,7 @@ extension HomeVC{
                             let ethnic = user["ethnic"].stringValue
                             let job = user["job"].stringValue
                             let phone = user["phone"].stringValue
-                            let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [])
+                            let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [], matches: [])
                             self.dbUsers.append(userObj)
                             
                             
@@ -678,7 +676,7 @@ extension HomeVC{
                         self.unhideLikeDislikeViews()
                     }
                     
-                    //self.cardStack_main.reloadData()
+//                    self.cardStack_main.reloadData()
                 }
                 DispatchQueue.main.async {
                     //self.hud.dismiss()
@@ -717,11 +715,11 @@ extension HomeVC{
         }
     }
     
-    func swipeRightAPI(userEmail: String, profileEmail: String, koloda: KolodaView){
+    func swipeRightAPI(userEmail: String, cardUser: User, koloda: KolodaView){
         
         
         let params = ["email": userEmail,
-        "profileEmail": profileEmail] as [String: Any]
+                      "profileEmail": cardUser.email] as [String: Any]
         
         AF.request(config.swipeRightURL, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (res) in
             let result = JSON(res.value)
@@ -741,11 +739,52 @@ extension HomeVC{
                 if(isMatched){
                     //user matched
                     //..
-                    self.matchedEmail = profileEmail
-                    print("congrats! you matched with \(profileEmail)")
-                    DispatchQueue.main.async {
-                        self.performSegue(withIdentifier: "goToLiked", sender: self)
-                    }
+                    let chat_id = result["chat_id"].stringValue
+                    
+                    self.matchedEmail = cardUser.email
+                    print("congrats! you matched with \(cardUser.email)")
+                    
+                    //create user channel
+                    let options = [
+                        TCHChannelOptionFriendlyName: chat_id,
+                        TCHChannelOptionType: TCHChannelType.private.rawValue
+                    ] as [String : Any]
+                    self.twilioClient.client?.channelsList()?.createChannel(options: options, completion: { (channelResult, channel) in
+                        if channelResult.isSuccessful(){
+                            if let channel = channel{
+                                channel.join { (res) in
+                                    if res.isSuccessful(){
+                                        
+                                        self.twilioClient.channelList.append(channel)
+                                        channel.members?.add(byIdentity: cardUser._id, completion: { (addRes) in
+                                            if addRes.isSuccessful(){
+                                                DispatchQueue.main.async {
+                                                    self.performSegue(withIdentifier: "goToLiked", sender: self)
+                                                }
+                                            }
+                                            else{
+                                                print(addRes.error)
+                                                self.present(utils.displayDialog(title: "Oops", msg: "Error adding member to channel"), animated: true, completion: nil)
+                                            }
+                                        })
+                                        
+                                    }
+                                    else{
+                                        print(res.error)
+                                        self.present(utils.displayDialog(title: "Oops", msg: "Error joining matched channel"), animated: true, completion: nil)
+                                    }
+                                }
+                                
+                            }
+                            
+                        }
+                        else{
+                            print(channelResult.error)
+                            self.present(utils.displayDialog(title: "Oops", msg: "Error creating matched channel"), animated: true, completion: nil)
+                        }
+                    })
+                    
+                    
                     
                 }
                 else{
@@ -818,6 +857,7 @@ extension HomeVC{
                 self.twilioClient.client = client
                 if let channels = client.channelsList(){
                     self.twilioClient.channelList = channels.subscribedChannels()
+                    
                     if self.twilioClient.channelList.count == 0{
                         
                         //no channels exists
@@ -827,14 +867,24 @@ extension HomeVC{
                         
                     }
                     else{
+                        
+                        
+                        
                         channels.userChannelDescriptors { (res, paginator) in
                             if res.isSuccessful(){
                                 //get paginator
                                 if let paginatorItems = paginator{
                                     for item in paginatorItems.items(){
                                         if let channelName = item.friendlyName{
+                                            
                                             if channelName.contains(self.user?.email ?? ""){
                                                 print(channelName)
+                                                
+//                                                item.channel { (res, channel) in
+//                                                    channel?.destroy(completion: { (resu) in
+//                                                        print("deleted")
+//                                                    })
+//                                                }
                                                 self.twilioClient.channelDescriptors.append(item)
                                             }
                                         }

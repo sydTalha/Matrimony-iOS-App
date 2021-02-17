@@ -9,6 +9,7 @@ import UIKit
 import Alamofire
 import SwiftyJSON
 import JGProgressHUD
+import TwilioChatClient
 
 class ChatsVC: UIViewController {
 
@@ -75,6 +76,16 @@ extension ChatsVC{
             destVC.user = user
             destVC.otherUser = otherUser
             destVC.chat_id = self.chat_id
+            destVC.twilioObj = self.twilioClient
+            for name in self.twilioClient.channelList{
+                if name.friendlyName == self.chat_id{
+                    destVC.currentChannel = name
+                }
+            }
+            if destVC.currentChannel == nil{
+                print("here")
+                //channel not created
+            }
         }
     }
 }
@@ -109,6 +120,7 @@ extension ChatsVC: UITableViewDelegate, UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: "chat_cell") as! ChatTableViewCell
         
         cell.personName_lbl.text = matchedUsers[indexPath.row].nickname
+        //cell.personName_lbl.text = matchedUsers[indexPath.row]
         return cell
     }
     
@@ -174,7 +186,7 @@ extension ChatsVC{
                         let ethnic = user["ethnic"].stringValue
                         let job = user["job"].stringValue
                         let phone = user["phone"].stringValue
-                        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [])
+                        let userObj = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: [], matches: [])
                         self.matchedUsers.append(userObj)
                         
                     }

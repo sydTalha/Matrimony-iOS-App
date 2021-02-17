@@ -34,6 +34,7 @@ class ChatDetailVC: MessagesViewController{
     var currentChannel: TCHChannel?
     var chat_id = ""
     
+    var twilioObj: TwilioClient = TwilioClient()
     var hud: JGProgressHUD?
     
     
@@ -91,12 +92,14 @@ extension ChatDetailVC{
         hud = JGProgressHUD(style: .dark)
         hud?.interactionType = .blockAllTouches
         
-        self.fetchTokenFromAPI(username: self.user?._id ?? "") { (token) in
-            self.twilioToken = token
-            print(self.chat_id)
-            self.initializeClientWithToken(token: self.twilioToken)
-        }
+//        self.fetchTokenFromAPI(username: self.user?._id ?? "") { (token) in
+//            self.twilioToken = token
+//            print(self.chat_id)
+//            self.initializeClientWithToken(token: self.twilioToken)
+//        }
 
+        
+        
     }
         
     override func viewDidAppear(_ animated: Bool) {
@@ -107,7 +110,70 @@ extension ChatDetailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-
+        self.twilioObj.client?.delegate = self
+        
+        if currentChannel == nil{
+            //create a channel here
+            print("channel is still empty")
+//            let options = [
+//                TCHChannelOptionFriendlyName: self.chat_id,
+//                TCHChannelOptionType: TCHChannelType.private.rawValue
+//            ] as [String : Any]
+//            self.twilioObj.client?.channelsList()?.createChannel(options: options, completion: { channelResult, channel in
+//                if (channelResult.isSuccessful()) {
+//                    print("channel created")
+//                    self.hud?.dismiss()
+//                    self.currentChannel = channel
+//
+//                    self.currentChannel?.join(completion: { (result) in
+//                        if result.isSuccessful(){
+//                            self.currentChannel?.members?.add(byIdentity: self.otherUser?._id ?? "", completion: { (joinResult) in
+//                                if joinResult.isSuccessful(){
+//                                    print("both users added")
+//                                }
+//                                else{
+//                                    print(joinResult.error)
+//                                    self.present(utils.displayDialog(title: "Oops", msg: "Error adding member to chat channel"), animated: true, completion: nil)
+//                                }
+//                            })
+//                        }
+//                        else{
+//                            print(result.error)
+//                            self.present(utils.displayDialog(title: "Oops", msg: "Error joining a chat channel"), animated: true, completion: nil)
+//                        }
+//                    })
+//
+//
+//
+//                } else {
+//                    self.present(utils.displayDialog(title: "Oops", msg: "Error Creating a chat channel"), animated: true, completion: nil)
+//                }
+//            })
+        }
+        
+        
+//        if let currentChannel = self.currentChannel{
+//            //let members = currentChannel.members?.membersList()
+//            let dispatchGroup = DispatchGroup()
+//            for members in currentChannel.members?.membersList() ?? []{
+//                if members.identity != self.user?._id ?? "" {
+//                    dispatchGroup.enter()
+//                    currentChannel.join { (result) in
+//                        if result.isSuccessful(){
+//                            print("joined current channel")
+//                            dispatchGroup.leave()
+//                        }
+//                        else{
+//                            print(result.error)
+//                            self.present(utils.displayDialog(title: "Twilio Chat Error", msg: "An error occurred while joining current chat channel"), animated: true, completion: nil)
+//                            dispatchGroup.leave()
+//                        }
+//                    }
+//                    break
+//                }
+//            }
+//        }
+        
     }
     
 }
@@ -119,11 +185,6 @@ extension ChatDetailVC{
         
         
         setupEventHandlers()
-        
-        print(isConnected)
-        if isConnected{
-            
-        }
         
     }
     
@@ -237,53 +298,52 @@ extension ChatDetailVC: InputBarAccessoryViewDelegate, MessagesDataSource, Messa
 
 //MARK:- Twilio API Delegates
 extension ChatDetailVC: TwilioChatClientDelegate, TCHChannelDelegate{
-    func chatClient(_ client: TwilioChatClient, channel: TCHChannel, synchronizationStatusUpdated status: TCHChannelSynchronizationStatus) {
-        
-        
-        if status == .all {
-            self.channelList = client.channelsList()
-            self.isSynced = true
-            //self.joinChannel()
-        }
-        else if status == .identifier{
-            print("identifier: \(status.rawValue)")
-            self.channelList = client.channelsList()
-            self.isSynced = true
-            //self.joinChannel()
-        }
-        else if status == .metadata{
-            print("metadata: \(status.rawValue)")
-            self.channelList = client.channelsList()
-            self.isSynced = true
-            self.joinChannel()
-        }
-        else if status == .failed{
-            print("failed: \(status.rawValue)")
-        }
-        else if status == .none{
-            print("none: \(status.rawValue)")
-        }
-        else{
-            print("error syncing \(status.rawValue)")
-        }
-    }
-    
-    func chatClient(_ client: TwilioChatClient, channelAdded channel: TCHChannel) {
-        if channel.status == .invited{
-            if channel.sid == self.chat_id{
-                channel.join { (result) in
-                    if result.isSuccessful(){
-                        print("joined invited channel")
-                    }
-                    else{
-                        self.present(utils.displayDialog(title: "Error", msg: "Something went wrong while accepting invite to channel"), animated: true, completion: nil)
-                    }
-                }
-            }
-            
-        }
-    }
-    
+//    func chatClient(_ client: TwilioChatClient, channel: TCHChannel, synchronizationStatusUpdated status: TCHChannelSynchronizationStatus) {
+//
+//
+//        if status == .all {
+//            self.channelList = client.channelsList()
+//            self.isSynced = true
+//            //self.joinChannel()
+//        }
+//        else if status == .identifier{
+//            print("identifier: \(status.rawValue)")
+//            self.channelList = client.channelsList()
+//            self.isSynced = true
+//            //self.joinChannel()
+//        }
+//        else if status == .metadata{
+//            print("metadata: \(status.rawValue)")
+//            self.channelList = client.channelsList()
+//            self.isSynced = true
+//            self.joinChannel()
+//        }
+//        else if status == .failed{
+//            print("failed: \(status.rawValue)")
+//        }
+//        else if status == .none{
+//            print("none: \(status.rawValue)")
+//        }
+//        else{
+//            print("error syncing \(status.rawValue)")
+//        }
+//    }
+//
+//    func chatClient(_ client: TwilioChatClient, channelAdded channel: TCHChannel) {
+//        if channel.status == .invited{
+//            if channel.sid == self.chat_id{
+//                channel.join { (result) in
+//                    if result.isSuccessful(){
+//                        print("joined invited channel")
+//                    }
+//                    else{
+//                        self.present(utils.displayDialog(title: "Error", msg: "Something went wrong while accepting invite to channel"), animated: true, completion: nil)
+//                    }
+//                }
+//            }
+//
+//        }
+//    }
     
     func chatClient(_ client: TwilioChatClient, channel: TCHChannel, messageAdded message: TCHMessage) {
         let msg = Message(id: message.sid ?? "", content: message.body ?? "", created: message.dateCreatedAsDate?.timeIntervalSince1970 ?? Date().timeIntervalSince1970, senderID: self.otherUser?._id ?? "", senderName: self.otherUser?.nickname ?? "")
@@ -303,7 +363,12 @@ extension ChatDetailVC: TwilioChatClientDelegate, TCHChannelDelegate{
 
 //MARK:- Helpers
 extension ChatDetailVC{
+    
+    
+    func joinChatChannel(){
         
+    }
+    
     func joinChannel(){
         client?.channelsList()?.channel(withSidOrUniqueName: self.currentChannel?.sid ?? "", completion: { (result, joinedChannel) in
             print(result.error)

@@ -112,7 +112,7 @@ extension EmailVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [])
+        user = User(_id: "", email: "", DOB: "", gender: "", nickname: "", city: "", country: "", lat: 0.0, lon: 0.0, sect: "", ethnic: "", job: "", phone: "", isCompleted: false, chatids: [], matches: [])
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -258,7 +258,7 @@ extension EmailVC{
         let lon = result["location"]["coords"]["lon"].doubleValue
         let isCompleted = result["isCompleted"].boolValue
         
-        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted, chatids: [])
+        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted, chatids: [], matches: [])
         
         if isCompleted{
             userDb.nickname = result["nickname"].stringValue
@@ -272,6 +272,14 @@ extension EmailVC{
                 idArr.append(id.stringValue)
             }
             userDb.chatids = idArr
+            if chatids.count != 0 {
+                let matchesArr = result["matches"].arrayValue
+                
+                for match in matchesArr{
+                    userDb.matches.append(match.stringValue)
+                }
+            }
+            
         }
         
         return userDb

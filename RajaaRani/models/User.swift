@@ -25,6 +25,7 @@ class User: NSObject, NSCoding{
     var phone: String = ""
     var isCompleted: Bool = false
     var chatids: [String] = [String]()
+    var matches: [String] = [String]()
     
     func encode(with coder: NSCoder) {
         coder.encode(_id, forKey: "_id")
@@ -42,6 +43,7 @@ class User: NSObject, NSCoding{
         coder.encode(phone, forKey: "phone")
         coder.encode(isCompleted, forKey: "isCompleted")
         coder.encode(chatids, forKey: "chatids")
+        coder.encode(matches, forKey: "matches")
     }
     
     required convenience init(coder aDecoder: NSCoder) {
@@ -60,11 +62,12 @@ class User: NSObject, NSCoding{
         let phone = aDecoder.decodeObject(forKey: "phone") as! String
         let isCompleted = aDecoder.decodeBool(forKey: "isCompleted")
         let chatids = aDecoder.decodeObject(forKey: "chatids") as! [String]
-        self.init(_id: _id, email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: chatids)
+        let matches = aDecoder.decodeObject(forKey: "matches") as! [String]
+        self.init(_id: _id, email: email, DOB: DOB, gender: gender, nickname: nickname, city: city, country: country, lat: lat, lon: lon, sect: sect, ethnic: ethnic, job: job, phone: phone, isCompleted: isCompleted, chatids: chatids, matches: matches)
     }
     
     
-    init(_id: String, email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool, chatids: [String]) {
+    init(_id: String, email: String, DOB: String, gender: String, nickname: String, city: String, country: String, lat: Double, lon: Double, sect: String, ethnic: String, job: String, phone: String, isCompleted: Bool, chatids: [String], matches: [String]) {
         self._id = _id
         self.email = email
         self.DOB = DOB
@@ -80,6 +83,7 @@ class User: NSObject, NSCoding{
         self.phone = phone
         self.isCompleted = isCompleted
         self.chatids = chatids
+        self.matches = matches
     }
 
 }
