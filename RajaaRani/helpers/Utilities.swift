@@ -22,6 +22,7 @@ struct config {
     static let matchedUsersURL = "https://secret-fortress-76633.herokuapp.com/matches"
     static let getTwilioTokenURL = "https://secret-fortress-76633.herokuapp.com/twilio/token"
     static let getChatIDAPI = "https://secret-fortress-76633.herokuapp.com/chats"
+    static let getTwilioVideoTokenURL = "https://secret-fortress-76633.herokuapp.com/twilio/video/token"
 }
 
 struct utils{
@@ -30,4 +31,14 @@ struct utils{
         alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
         return alert
     }
+}
+
+struct PlatformUtils {
+    static let isSimulator: Bool = {
+        var isSim = false
+        #if arch(i386) || arch(x86_64)
+            isSim = true
+        #endif
+        return isSim
+    }()
 }

@@ -15,6 +15,9 @@
 		65123BA9258BB72A00DB8C9D /* Dashboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */; };
 		6516DE5D25A6123F0064FF57 /* SelfieVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6516DE5C25A6123F0064FF57 /* SelfieVC.swift */; };
 		651DC60425C829DB0005E00A /* TwilioClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 651DC60325C829DB0005E00A /* TwilioClient.swift */; };
+		65231A4825DEB49F008C1818 /* CallVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65231A4725DEB49F008C1818 /* CallVC.swift */; };
+		65231A4B25DEBEA8008C1818 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65231A4A25DEBEA8008C1818 /* Settings.swift */; };
+		65231A4E25DEC1CD008C1818 /* ProviderDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65231A4D25DEC1CD008C1818 /* ProviderDelegate.swift */; };
 		652902EA259E2C0700CE0293 /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652902E9259E2C0700CE0293 /* SettingsTableViewCell.swift */; };
 		652902EE259E331600CE0293 /* SettingsVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 652902ED259E331600CE0293 /* SettingsVC.swift */; };
 		653777AD25A4975200AEB64B /* NicknameVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653777AC25A4975200AEB64B /* NicknameVC.swift */; };
@@ -76,6 +79,9 @@
 		65123BA8258BB72A00DB8C9D /* Dashboard.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Dashboard.storyboard; sourceTree = "<group>"; };
 		6516DE5C25A6123F0064FF57 /* SelfieVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelfieVC.swift; sourceTree = "<group>"; };
 		651DC60325C829DB0005E00A /* TwilioClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TwilioClient.swift; sourceTree = "<group>"; };
+		65231A4725DEB49F008C1818 /* CallVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CallVC.swift; sourceTree = "<group>"; };
+		65231A4A25DEBEA8008C1818 /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		65231A4D25DEC1CD008C1818 /* ProviderDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderDelegate.swift; sourceTree = "<group>"; };
 		652902E9259E2C0700CE0293 /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
 		652902ED259E331600CE0293 /* SettingsVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsVC.swift; sourceTree = "<group>"; };
 		653777AC25A4975200AEB64B /* NicknameVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NicknameVC.swift; sourceTree = "<group>"; };
@@ -273,6 +279,7 @@
 		657A24EB25867760007C9B50 /* helpers */ = {
 			isa = PBXGroup;
 			children = (
+				65231A4A25DEBEA8008C1818 /* Settings.swift */,
 				65A1E1F82588A6C700A028E6 /* Extensions.swift */,
 				65A1E1FC2588A8C400A028E6 /* NetworkMonitor.swift */,
 				65040C9F25962E07005D0550 /* Utilities.swift */,
@@ -357,6 +364,7 @@
 			children = (
 				65B31DE025B1C565002CB036 /* ChatService.swift */,
 				6507DEF425B7058A00953571 /* ChannelManager.swift */,
+				65231A4D25DEC1CD008C1818 /* ProviderDelegate.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -377,6 +385,7 @@
 				65BB1B0925AF868600C72D26 /* TableViewCells */,
 				6583A608258CCDE800C0DE6B /* ChatsVC.swift */,
 				656147B425B0A3E6007B8248 /* ChatDetailVC.swift */,
+				65231A4725DEB49F008C1818 /* CallVC.swift */,
 			);
 			path = Chats;
 			sourceTree = "<group>";
@@ -422,6 +431,7 @@
 			buildConfigurationList = 657A24E225865E66007C9B50 /* Build configuration list for PBXNativeTarget "RajaaRani" */;
 			buildPhases = (
 				24AFFCC3FA9D4CD13A262246 /* [CP] Check Pods Manifest.lock */,
+				D2B5BD5A31ED8C67B6E04DB1 /* [CP] Prepare Artifacts */,
 				657A24CA25865E65007C9B50 /* Sources */,
 				657A24CB25865E65007C9B50 /* Frameworks */,
 				657A24CC25865E65007C9B50 /* Resources */,
@@ -551,6 +561,23 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		D2B5BD5A31ED8C67B6E04DB1 /* [CP] Prepare Artifacts */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-artifacts-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Prepare Artifacts";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-artifacts-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RajaaRani/Pods-RajaaRani-artifacts.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -567,6 +594,7 @@
 				65B31DE125B1C565002CB036 /* ChatService.swift in Sources */,
 				65895F73258A069E0054EDCC /* BirthdaySelectionVC.swift in Sources */,
 				65BB1B0225AF625000C72D26 /* Message.swift in Sources */,
+				65231A4E25DEC1CD008C1818 /* ProviderDelegate.swift in Sources */,
 				6583A603258CCDCA00C0DE6B /* HomeVC.swift in Sources */,
 				65533E5B25949F4D0058F941 /* ProfileCard.swift in Sources */,
 				651DC60425C829DB0005E00A /* TwilioClient.swift in Sources */,
@@ -577,6 +605,7 @@
 				654CD62F2590C838001B0581 /* ProfileDetailView.swift in Sources */,
 				65DDE9C025AF3C7A00E3C867 /* SocketIOManager.swift in Sources */,
 				65ADED6925BADE7800C893AA /* UserStatsFirstCell.swift in Sources */,
+				65231A4825DEB49F008C1818 /* CallVC.swift in Sources */,
 				656147B525B0A3E6007B8248 /* ChatDetailVC.swift in Sources */,
 				65F5E0A625A36D7F0016B977 /* CompleteProfileVC.swift in Sources */,
 				654A7EF725A8B244002B5D0D /* ProfileUnderReviewVC.swift in Sources */,
@@ -599,6 +628,7 @@
 				6583A609258CCDE800C0DE6B /* ChatsVC.swift in Sources */,
 				65A843E5259F658100A75EBD /* EditSectionCell.swift in Sources */,
 				65A843E9259F65AB00A75EBD /* SwitchSectionCell.swift in Sources */,
+				65231A4B25DEBEA8008C1818 /* Settings.swift in Sources */,
 				6516DE5D25A6123F0064FF57 /* SelfieVC.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

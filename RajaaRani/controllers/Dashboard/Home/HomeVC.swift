@@ -13,6 +13,7 @@ import SwiftyJSON
 import CoreLocation
 import AVFoundation
 import TwilioChatClient
+import TwilioVideo
 
 class HomeVC: UIViewController {
 
@@ -31,6 +32,7 @@ class HomeVC: UIViewController {
     var looper: AVPlayerLooper?
     var hud: JGProgressHUD = JGProgressHUD(style: .dark)
     var twilioClient: TwilioClient = TwilioClient()
+    var twilioToken: String = ""
     
     //MARK:- Outlets
     @IBOutlet weak var tableView: UITableView!
@@ -361,6 +363,7 @@ extension HomeVC{
                     }
                     else{
                         print(token)
+                        self.twilioToken = token
                         self.initializeClientWithToken(token: token) {
                             print(self.twilioClient.channelDescriptors.count)
                         }
@@ -400,6 +403,18 @@ extension HomeVC: TwilioChatClientDelegate{
             print("failed")
             self.present(utils.displayDialog(title: "Oops", msg: "Twilio API Failed"), animated: true, completion: nil)
         }
+    }
+    
+}
+
+//MARK:- TwilioVideo Room Delegate
+extension HomeVC: RoomDelegate{
+    func roomDidConnect(room: Room) {
+        
+    }
+    
+    func roomDidDisconnect(room: Room, error: Error?) {
+        
     }
 }
 
@@ -754,10 +769,11 @@ extension HomeVC{
                             if let channel = channel{
                                 channel.join { (res) in
                                     if res.isSuccessful(){
-                                        
+
                                         self.twilioClient.channelList.append(channel)
                                         channel.members?.add(byIdentity: cardUser._id, completion: { (addRes) in
                                             if addRes.isSuccessful(){
+
                                                 DispatchQueue.main.async {
                                                     self.performSegue(withIdentifier: "goToLiked", sender: self)
                                                 }
@@ -767,7 +783,7 @@ extension HomeVC{
                                                 self.present(utils.displayDialog(title: "Oops", msg: "Error adding member to channel"), animated: true, completion: nil)
                                             }
                                         })
-                                        
+
                                     }
                                     else{
                                         print(res.error)

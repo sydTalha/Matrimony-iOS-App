@@ -12,7 +12,7 @@ import TwilioChatClient
 import Alamofire
 import SwiftyJSON
 import JGProgressHUD
-
+import TwilioVideo
 
 
 class ChatDetailVC: MessagesViewController{
@@ -36,6 +36,7 @@ class ChatDetailVC: MessagesViewController{
     
     var twilioObj: TwilioClient = TwilioClient()
     var hud: JGProgressHUD?
+    
     
     
     
@@ -64,7 +65,8 @@ class ChatDetailVC: MessagesViewController{
     @objc func phoneTapped(tapGestureRecognizer: UITapGestureRecognizer){
         //let tappedImage = tapGestureRecognizer.view as! UIImageView
 
-        self.present(utils.displayDialog(title: "Coming Soon", msg: "This feature is under development and coming very soon"), animated: true, completion: nil)
+//        self.present(utils.displayDialog(title: "Coming Soon", msg: "This feature is under development and coming very soon"), animated: true, completion: nil)
+        performSegue(withIdentifier: "goToCall", sender: self)
     }
 
     @objc func videoTapped(tapGestureRecognizer: UITapGestureRecognizer){
@@ -111,6 +113,12 @@ extension ChatDetailVC{
         self.setupInterface()
         
         self.twilioObj.client?.delegate = self
+    
+        
+        
+        
+        
+        
         
         if currentChannel == nil{
             //create a channel here
@@ -176,6 +184,14 @@ extension ChatDetailVC{
         
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToCall"{
+            let destVC = segue.destination as! CallVC
+            destVC.user = self.user
+            destVC.chat_id = self.chat_id
+        }
+    }
+    
 }
 
 //MARK:- Interface Setup
@@ -183,6 +199,34 @@ extension ChatDetailVC{
     func setupInterface(){
         setupMessageVC()
         
+        self.currentChannel?.messages?.getLastWithCount(100, completion: { (result, items) in
+            if result.isSuccessful(){
+                if let items = items{
+                    if items.count != 0{
+                        for message in items{
+                            
+                            if message.author ?? "" == self.user?._id ?? ""{
+                                let msgType = Message(id: message.sid ?? "", content: message.body ?? "", created: message.dateCreatedAsDate?.timeIntervalSince1970 ?? Date().timeIntervalSince1970, senderID: message.author ?? "", senderName: self.user?._id ?? "")
+                                
+                                self.messages.append(msgType)
+                                
+                            }
+                            else if message.author ?? "" == self.otherUser?._id ?? ""{
+                                let msgType = Message(id: message.sid ?? "", content: message.body ?? "", created: message.dateCreatedAsDate?.timeIntervalSince1970 ?? Date().timeIntervalSince1970, senderID: message.author ?? "", senderName: self.otherUser?._id ?? "")
+                                self.messages.append(msgType)
+                                
+                            }
+                            
+                        }
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToBottom(animated: true)
+                    }
+                }
+            }
+            else{
+                self.present(utils.displayDialog(title: "Oops", msg: "Failed to load chat previous messages"), animated: true, completion: nil)
+            }
+        })
         
         setupEventHandlers()
         
@@ -270,6 +314,7 @@ extension ChatDetailVC: InputBarAccessoryViewDelegate, MessagesDataSource, Messa
         
         if let msgs = currentChannel?.messages{
             let options = TCHMessageOptions().withBody(text)
+            
             msgs.sendMessage(with: options) { (result, msg) in
                 if result.isSuccessful(){
                     let message = Message(id: msg?.sid ?? "", content: text, created: Date().timeIntervalSince1970, senderID: self.user?._id ?? "", senderName: self.user?.nickname ?? "")
@@ -291,12 +336,18 @@ extension ChatDetailVC: InputBarAccessoryViewDelegate, MessagesDataSource, Messa
         //messagesCollectionView.scrollToBottom(animated: true)
     }
     
+    func inputBar(_ inputBar: InputBarAccessoryView, textViewTextDidChangeTo text: String) {
+        let currentText: String = inputBar.inputTextView.text
+        currentChannel?.typing()
+    }
     
 }
 
 
 
-//MARK:- Twilio API Delegates
+
+
+//MARK:- Twilio Chat Delegates
 extension ChatDetailVC: TwilioChatClientDelegate, TCHChannelDelegate{
 //    func chatClient(_ client: TwilioChatClient, channel: TCHChannel, synchronizationStatusUpdated status: TCHChannelSynchronizationStatus) {
 //
@@ -346,6 +397,9 @@ extension ChatDetailVC: TwilioChatClientDelegate, TCHChannelDelegate{
 //    }
     
     func chatClient(_ client: TwilioChatClient, channel: TCHChannel, messageAdded message: TCHMessage) {
+        
+        setTypingIndicatorViewHidden(true, animated: true)
+        
         let msg = Message(id: message.sid ?? "", content: message.body ?? "", created: message.dateCreatedAsDate?.timeIntervalSince1970 ?? Date().timeIntervalSince1970, senderID: self.otherUser?._id ?? "", senderName: self.otherUser?.nickname ?? "")
         
         if message.author == self.otherUser?._id ?? ""{
@@ -353,11 +407,19 @@ extension ChatDetailVC: TwilioChatClientDelegate, TCHChannelDelegate{
             messagesCollectionView.reloadData()
             messagesCollectionView.scrollToBottom(animated: true)
         }
-        
-        
     }
     
-    
+    func chatClient(_ client: TwilioChatClient, typingStartedOn channel: TCHChannel, member: TCHMember) {
+        print("typing")
+        messagesCollectionView.scrollToBottom(animated: true)
+        setTypingIndicatorViewHidden(false, animated: true)
+    }
+    func chatClient(_ client: TwilioChatClient, typingEndedOn channel: TCHChannel, member: TCHMember) {
+        print("typing ended")
+        
+        setTypingIndicatorViewHidden(true, animated: true)
+        messagesCollectionView.scrollToBottom(animated: true)
+    }
     
 }
 
