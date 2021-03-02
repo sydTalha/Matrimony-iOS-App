@@ -14,6 +14,7 @@ import CoreLocation
 import AVFoundation
 import TwilioChatClient
 import TwilioVideo
+import EzPopup
 
 class HomeVC: UIViewController {
 
@@ -39,13 +40,20 @@ class HomeVC: UIViewController {
     
     @IBOutlet weak var username_Age_lbl: UILabel!
     
-    @IBOutlet weak var dislike_view: UIView!
-    
-    @IBOutlet weak var like_view: UIView!
     
     @IBOutlet weak var cardView: KolodaView!
     
     @IBOutlet weak var endOfStack_lbl: UILabel!
+    
+    @IBOutlet weak var dislike_view: UIView!
+    
+    @IBOutlet weak var like_view: UIView!
+    
+    @IBOutlet weak var chat_view: UIView!
+    
+    @IBOutlet weak var actions_stackView: UIStackView!
+    
+    
     
     
     //MARK:- Constraints
@@ -106,7 +114,7 @@ extension HomeVC{
     
     
     
-    
+     
     override func viewDidAppear(_ animated: Bool) {
         
     }
@@ -118,6 +126,7 @@ extension HomeVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        self.hud.show(in: self.view)
         self.setupInterface()
         
         tableView.delegate = self
@@ -137,6 +146,7 @@ extension HomeVC{
             let destVC = segue.destination as! LikedVC
             destVC.email = matchedEmail
         }
+        
     }
     
 }
@@ -147,29 +157,23 @@ extension HomeVC{
     func setupInterface(){
         print(user?.email)
         
+        setupTabBar()
+        setupUIViews()
+        
         print(NetworkMonitor.isConnectionAvailable)
+        
 //        if !NetworkMonitor.isConnectionAvailable{
 //            let alert = UIAlertController(title: "Network not available", message: "Please enable Wi-Fi or Cellular Data to access data", preferredStyle: UIAlertController.Style.alert)
 //            alert.addAction(UIAlertAction(title: "Ok", style: UIAlertAction.Style.default, handler: nil))
 //            self.present(alert, animated: true, completion: nil)
 //        }
         
-        
-        
         if self.user?.isCompleted ?? false{
             self.tabBarController?.tabBar.isUserInteractionEnabled = false
 
             self.setupTwilioChatChannels()
         }
-        self.cardView.cornerRadius = 13
-        self.cardView.setCardView()
-        self.cardView.countOfVisibleCards = 2
-        self.like_view.layer.cornerRadius = self.like_view.frame.size.width/2
-        self.like_view.clipsToBounds = true
-        
-        self.dislike_view.layer.cornerRadius = self.dislike_view.frame.size.width/2
-        self.dislike_view.clipsToBounds = true
-        
+    
         
         
         getLocationService()
@@ -178,6 +182,34 @@ extension HomeVC{
         
         setupEventHandlers()
         
+    }
+    
+    
+    func setupTabBar(){
+        let tabBar = self.tabBarController!.tabBar
+        
+        
+        tabBar.selectionIndicatorImage = UIImage().createSelectionIndicator(color: UIColor(red: 233/255, green: 169/255, blue: 57/255, alpha: 1.0), size: CGSize(width: tabBar.frame.width/CGFloat(tabBar.items!.count), height: tabBar.frame.height), lineWidth: 2.0)
+        
+        
+        tabBar.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
+        tabBar.layer.shadowRadius = 16
+        tabBar.layer.shadowColor = UIColor.gray.cgColor
+        tabBar.layer.shadowOpacity = 0.3
+    }
+    
+    func setupUIViews(){
+        like_view.layer.cornerRadius = like_view.frame.size.width/2
+        like_view.clipsToBounds = true
+        dislike_view.layer.cornerRadius = dislike_view.frame.size.width/2
+        dislike_view.clipsToBounds = true
+        chat_view.layer.cornerRadius = chat_view.frame.size.width/2
+        chat_view.clipsToBounds = true
+        
+        like_view.setCardView()
+        dislike_view.setCardView()
+        chat_view.setCardView()
+        self.cardView.countOfVisibleCards = 3
     }
     
     func getLocationService(){
@@ -211,34 +243,15 @@ extension HomeVC{
     }
     
     func hideLikeDislikeViews(){
-//        UIView.transition(with: self.like_view,
-//                          duration: 0.5,
-//              options: .transitionCrossDissolve,
-//           animations: { [weak self] in
-//            self?.like_view.isHidden = true
-//        }, completion: nil)
-//
-//        UIView.transition(with: self.dislike_view,
-//                          duration: 0.5,
-//              options: .transitionCrossDissolve,
-//           animations: { [weak self] in
-//            self?.dislike_view.isHidden = true
-//        }, completion: nil)
-        
-        
-        UIView.animate(withDuration: 0.5) {
-            self.like_view.alpha = 0.0
-        } completion: { (finished) in
-            self.like_view.isHidden = finished
-        }
 
         
-        UIView.animate(withDuration: 0.5) {
-            self.dislike_view.alpha = 0.0
-        } completion: { (finished) in
-            self.dislike_view.isHidden = finished
-        }
-
+        UIView.transition(with: self.actions_stackView,
+                          duration: 0.5,
+              options: .transitionCrossDissolve,
+           animations: { [weak self] in
+            self?.actions_stackView.isHidden = true
+        }, completion: nil)
+        
         
         UIView.animate(withDuration: 0.5) {
             self.cardView.alpha = 0.0
@@ -263,30 +276,21 @@ extension HomeVC{
         } completion: { (finished) in
             self.username_Age_lbl.isHidden = finished
         }
-        
-//        UIView.transition(with: self.cardView,
-//                          duration: 0.5,
-//              options: .transitionCrossDissolve,
-//           animations: { [weak self] in
-//            self?.cardView.isHidden = true
-//        }, completion: nil)
+
     }
     
     
     func unhideLikeDislikeViews(){
-        UIView.transition(with: self.like_view,
-                          duration: 0.3,
+
+        
+        
+        UIView.transition(with: self.actions_stackView,
+                          duration: 0.5,
               options: .transitionCrossDissolve,
            animations: { [weak self] in
-            self?.like_view.isHidden = false
+            self?.actions_stackView.isHidden = false
         }, completion: nil)
         
-        UIView.transition(with: self.dislike_view,
-                          duration: 0.3,
-              options: .transitionCrossDissolve,
-           animations: { [weak self] in
-            self?.dislike_view.isHidden = false
-        }, completion: nil)
         
         UIView.transition(with: self.cardView,
                           duration: 0.3,
@@ -313,20 +317,11 @@ extension HomeVC{
         } completion: { (finished) in
             self.username_Age_lbl.isHidden = !finished
         }
-        
+        self.cardView.reloadData()
     }
     
     
     func setTextAnimation(label: UILabel, text: String){
-//        let animation:CATransition = CATransition()
-//        animation.timingFunction = CAMediaTimingFunction(name:
-//            CAMediaTimingFunctionName.easeInEaseOut)
-//        animation.type = CATransitionType.push
-//        label.text = text
-//        animation.duration = 0.25
-//        label.layer.add(animation, forKey: CATransitionType.push.rawValue)
-        
-        
         let animation = CATransition()
         animation.timingFunction = CAMediaTimingFunction(name: CAMediaTimingFunctionName.easeInEaseOut)
         animation.type = CATransitionType.push
@@ -359,12 +354,14 @@ extension HomeVC{
                 //fetching twilio token only when user is logged in
                 TwilioManager.fetchTokenFromAPI(username: self.user?._id ?? "") { (token) in
                     if token == "" {
+                        self.hud.dismiss()
                         self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while fetching Twilio token"), animated: true, completion: nil)
                     }
                     else{
                         print(token)
                         self.twilioToken = token
                         self.initializeClientWithToken(token: token) {
+                            self.hud.dismiss()
                             print(self.twilioClient.channelDescriptors.count)
                         }
                         
@@ -431,10 +428,10 @@ extension HomeVC: UITableViewDelegate, UITableViewDataSource{
         }
         if indexPath.row == 0{
             let cell = tableView.dequeueReusableCell(withIdentifier: "aboutme_cell") as! AboutMeCell
-            
+
             self.setTextAnimation(label: cell.aboutDesc_lbl, text: "About me. To choose what personal info to show when you interact with others on Google services, sign in to your account. Sign in. PrivacyTermsHelpAbout.")
-            
-            
+
+
             cell.selectionStyle = .none
             return cell
         }
@@ -498,28 +495,13 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
         let img = UIImage(named: "placeholder-card")
         let imgView = UIImageView(image: img)
         
-        
-        let ss = UIView()
-        
-        ss.frame = cardView.bounds
-        //imgView.frame = ss.frame
-        //ss.addSubview(imgView)
-        
-        playVideo(videoLayer: ss)
-        cardView.bringSubviewToFront(ss)
+        imgView.frame = cardView.bounds
+        imgView.cornerRadius = 13
+        imgView.imageShadow()
         
         
-        
-        //let profileView = ProfileCard(frame: cardStack_main.bounds)
-        //imgView.cornerRadius = 13
-        
-        //let userCardDetails = ["userCard": dbUsers[index]]
-        //NotificationCenter.default.post(name: Notification.Name("userObj_sent"), object: nil, userInfo: userCardDetails as [AnyHashable : Any])
-        
-        
-//        profileView.user = dbUsers[index]
-//        s.addSubview(profileView)
-        return ss
+        cardView.clipsToBounds = false
+        return imgView
     }
     
     func koloda(_ koloda: KolodaView, didShowCardAt index: Int) {
@@ -545,14 +527,7 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
     func koloda(_ koloda: KolodaView, didSwipeCardAt index: Int, in direction: SwipeResultDirection) {
         //print(index)
         let swipeUser = dbUsers[index]
-        //self.kolodaIndex = index
-//        var indexArr = [IndexPath]()
-//        indexArr.append(IndexPath(row: 0, section: 0))
-//        indexArr.append(IndexPath(row: 1, section: 0))
-//        indexArr.append(IndexPath(row: 2, section: 0))
-//        self.tableView.reloadRows(at: indexArr, with: .automatic)
-//
-//        self.setTextAnimation(label: username_Age_lbl, text: swipeUser.nickname)
+
         if direction == .left{
             if self.user?.isCompleted ?? false{
                 print("swipe left")
@@ -587,17 +562,41 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
     
     func kolodaDidRunOutOfCards(_ koloda: KolodaView) {
         print(koloda.isRunOutOfCards)
-        if dbUsers.count == 0{
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                self.hideLikeDislikeViews()
-            }
-        }
-        
+        print("users count: \(dbUsers.count)")
+//        if dbUsers.count == 0{
+//            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//                self.hideLikeDislikeViews()
+//            }
+//        }
+        self.hideLikeDislikeViews()
         
         
         
     }
 
+    func koloda(_ koloda: KolodaView, shouldDragCardAt index: Int) -> Bool {
+        return false
+    }
+    
+    func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
+        //performSegue(withIdentifier: "goToPics", sender: self)
+        
+        let storyboard : UIStoryboard = UIStoryboard(name: "Dashboard", bundle: nil)
+        let contentVC = storyboard.instantiateViewController(withIdentifier: "gallery") as! GalleryVC
+        
+        let screenSize = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        
+        let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth - 50, popupHeight: screenHeight - 50)
+        popupVC.backgroundAlpha = 0.5
+        popupVC.backgroundColor = .black
+        popupVC.canTapOutsideToDismiss = true
+        popupVC.cornerRadius = 10
+        popupVC.shadowEnabled = false
+        present(popupVC, animated: true, completion: nil)
+        
+    }
     
 }
 
@@ -614,6 +613,7 @@ extension HomeVC: CLLocationManagerDelegate{
             guard let city = city, let country = country, error == nil else { return }
             print(city + ", " + country)
             //self.user?.city = city.lowercased()
+            self.user?.city = "islamabad"
             self.user?.country = country.lowercased()
             self.loadProfiles()
             
@@ -660,7 +660,7 @@ extension HomeVC{
                     
                     let userArr = result.array!
                     if userArr.count == 0{
-                        //self.hud.dismiss()
+                        self.hud.dismiss()
                         print("no users")
                         self.hideLikeDislikeViews()
                     }
@@ -687,7 +687,11 @@ extension HomeVC{
                             
                             
                         }
-                        self.cardView.reloadData()
+                        //self.hud.dismiss()
+                        if !(self.user?.isCompleted ?? false){
+                            self.hud.dismiss()
+                        }
+                        //self.cardView.reloadData()
                         self.unhideLikeDislikeViews()
                     }
                     
@@ -700,6 +704,7 @@ extension HomeVC{
                 }
             }
             else{
+                self.hud.dismiss()
                 self.present(utils.displayDialog(title: "API Timeout", msg: "An error occurred with Backend API"), animated: true, completion: nil)
             }
         }
@@ -833,39 +838,21 @@ extension HomeVC{
         }
     }
     
-    func playVideo(videoLayer: UIView){
-        guard let path = Bundle.main.path(forResource: "intro", ofType: "mp4") else{
-            return
-        }
-        
-        let asset = AVAsset(url: URL(fileURLWithPath: path))
-        let playerItem = AVPlayerItem(asset: asset)
-        queuePlayer = AVQueuePlayer(playerItem: playerItem)
-        playerLayer = AVPlayerLayer(player: queuePlayer)
-        looper = AVPlayerLooper(player: queuePlayer!, templateItem: playerItem)
-        
-        playerLayer!.frame = videoLayer.bounds
-        playerLayer!.videoGravity = .resizeAspectFill
-        
-        videoLayer.cornerRadius = 13
-        videoLayer.layer.addSublayer(playerLayer!)
-        queuePlayer?.play()
-        
-        //allViewsToFront()
-    }
+    
     
     func initializeClientWithToken(token: String, completion: @escaping ()->()){
         
         TwilioChatClient.setLogLevel(.critical)
-        hud.show(in: self.view)
-        
+        //hud.show(in: self.view)
+        self.hud.show(in: self.view)
         TwilioChatClient.chatClient(withToken: token, properties: nil, delegate: self) { result, chatClient in
-            print(chatClient)
+            print("chat client \(chatClient)")
             guard (result.isSuccessful()) else {
+                self.hud.dismiss()
                 print(result.resultText)
                 return
             }
-            print("here")
+            
             
             //print("early: \(self.twilioClient?.channelsList()?.subscribedChannels().count)")
             
@@ -911,6 +898,7 @@ extension HomeVC{
                                 }
                             }
                             else{
+                                self.hud.dismiss()
                                 self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while getting chat channels"), animated: true, completion: nil)
                             }
                         }

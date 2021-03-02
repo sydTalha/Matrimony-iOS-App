@@ -70,6 +70,17 @@ extension UIView {
         layer.masksToBounds = false
     }
     
+    func imageShadow(){
+        layer.masksToBounds = true
+
+        
+        layer.shadowColor = UIColor.lightGray.cgColor
+        layer.shadowOpacity = 0.9
+        layer.shadowOffset = CGSize(width: 8.0, height: 8.0)
+        layer.shadowRadius = 15.0
+        layer.masksToBounds = false
+    }
+    
     func setSmallShadow(){
         //layer.cornerRadius = 55
         layer.masksToBounds = true
@@ -232,6 +243,18 @@ extension UInt {
 //MARK:- Notification
 extension Notification.Name {
     public static let twilioDataNotificationKey = Notification.Name(rawValue: "twilioObj")
+}
+
+//MARK:- UIImage
+extension UIImage{
+    func createSelectionIndicator(color: UIColor, size: CGSize, lineWidth: CGFloat) -> UIImage {
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        color.setFill()
+        UIRectFill(CGRect(x: 0, y: 0, width: size.width, height: lineWidth))
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image!
+    }
 }
 
 

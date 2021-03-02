@@ -13,6 +13,7 @@ import Alamofire
 import SwiftyJSON
 import JGProgressHUD
 import TwilioVideo
+import Hero
 
 
 class ChatDetailVC: MessagesViewController{
@@ -56,6 +57,7 @@ class ChatDetailVC: MessagesViewController{
     //MARK:- Actions
     
     @IBAction func backBtnTapped(_ sender: UIButton) {
+        self.navigationController?.hero.isEnabled = false
         self.navigationController?.popViewController(animated: true)
     }
     
@@ -67,12 +69,15 @@ class ChatDetailVC: MessagesViewController{
 
 //        self.present(utils.displayDialog(title: "Coming Soon", msg: "This feature is under development and coming very soon"), animated: true, completion: nil)
         performSegue(withIdentifier: "goToCall", sender: self)
+        
     }
 
     @objc func videoTapped(tapGestureRecognizer: UITapGestureRecognizer){
         //let tappedImage = tapGestureRecognizer.view as! UIImageView
 
-        self.present(utils.displayDialog(title: "Coming Soon", msg: "This feature is under development and coming very soon"), animated: true, completion: nil)
+//        self.present(utils.displayDialog(title: "Coming Soon", msg: "This feature is under development and coming very soon"), animated: true, completion: nil)
+        
+        performSegue(withIdentifier: "goToVideo", sender: self)
     }
     
 }
@@ -113,7 +118,10 @@ extension ChatDetailVC{
         self.setupInterface()
         
         self.twilioObj.client?.delegate = self
-    
+        
+        self.navigationController?.hero.isEnabled = true
+        self.navigationController?.hero.navigationAnimationType = .fade
+        self.hero.modalAnimationType = .selectBy(presenting:.zoom, dismissing:.zoomOut)
         
         
         
@@ -187,6 +195,12 @@ extension ChatDetailVC{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToCall"{
             let destVC = segue.destination as! CallVC
+            destVC.user = self.user
+            destVC.chat_id = self.chat_id
+        }
+        
+        if segue.identifier == "goToVideo"{
+            let destVC = segue.destination as! VideoVC
             destVC.user = self.user
             destVC.chat_id = self.chat_id
         }

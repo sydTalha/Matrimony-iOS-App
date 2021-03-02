@@ -2,7 +2,6 @@
 //  AboutMeCell.swift
 //  RajaaRani
 //
-//  Created by Rizwan on 1/22/21.
 //
 
 import UIKit

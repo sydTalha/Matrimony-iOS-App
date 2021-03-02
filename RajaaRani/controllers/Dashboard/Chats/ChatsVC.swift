@@ -47,6 +47,9 @@ extension ChatsVC{
 extension ChatsVC{
     
     override func viewDidAppear(_ animated: Bool) {
+        self.navigationController?.hero.isEnabled = false
+        self.navigationController?.hero.navigationAnimationType = .fade
+        
         self.matchedUsers.removeAll()
         
         //NotificationCenter.default.addObserver(self, selector: #selector(self.getTwilioObj(_:)), name: .twilioDataNotificationKey, object: nil)
@@ -93,6 +96,8 @@ extension ChatsVC{
 //MARK:- Interface Setup
 extension ChatsVC{
     func setupInterface(){
+        
+        
         let vc = self.tabBarController?.viewControllers![0] as! HomeVC
         self.user = vc.user
         

@@ -9,6 +9,7 @@ import UIKit
 import TwilioVideo
 import CallKit
 import AVFoundation
+import Hero
 
 class CallVC: UIViewController {
 
@@ -25,15 +26,37 @@ class CallVC: UIViewController {
     
     //MARK:- Outlets
     
+    @IBOutlet weak var imgView: UIImageView!
+    
     @IBOutlet weak var status_lbl: UILabel!
     
+    @IBOutlet weak var username_lbl: UILabel!
+    
+    @IBOutlet weak var endBtn: UIButton!
     
     //MARK:- Actions
     
     @IBAction func backTapped(_ sender: UIButton) {
-        self.navigationController?.popViewController(animated: true)
+        //self.navigationController?.popViewController(animated: true)
         //self.dismiss(animated: true, completion: nil)
+        
+        self.room?.disconnect()
+        self.hero.dismissViewController()
     }
+    
+    @IBAction func speakerTapped(_ sender: UIButton) {
+        
+        
+    }
+    
+    
+    @IBAction func muteTapped(_ sender: UIButton) {
+        
+        
+    }
+    
+    
+    
     
     //MARK:- Event Handlers
     
@@ -45,15 +68,32 @@ extension CallVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        
+        //self.configureAudioSessionToEarSpeaker()
+        do { ///Audio Session: Set on Speaker
+            try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            try AVAudioSession.sharedInstance().setActive(true)
+
+            print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",AVAudioSession.sharedInstance().currentRoute.outputs)
+        }
+        catch{
+            print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
+        }
+        
         self.audioDevice = DefaultAudioDevice()
         audioDevice.isEnabled = true
         TwilioVideoSDK.audioDevice = audioDevice
+        
+        
         
         self.setupInterface()
         //TwilioVideoSDK.setLogLevel(.debug)
         self.setupCallKit()
         
+        self.navigationController?.hero.navigationAnimationType = .fade
+        self.navigationController?.hero.isEnabled = true
         
+        self.hero.modalAnimationType = .selectBy(presenting:.zoom, dismissing:.zoomOut)
         
     }
     
@@ -85,6 +125,13 @@ extension CallVC{
         
     }
     func setupInterface(){
+        
+        imgView.layer.cornerRadius = imgView.frame.size.width/2
+        imgView.clipsToBounds = true
+        
+        endBtn.layer.cornerRadius = endBtn.frame.size.width/2
+        endBtn.clipsToBounds = true
+        
         TwilioManager.fetchVideoTokenFromAPI(username: self.user?._id ?? "", chat_id: chat_id) { (token) in
             if token == "" {
                 self.present(utils.displayDialog(title: "Oops", msg: "Something went wrong while fetching Twilio Video token"), animated: true, completion: nil)
@@ -109,12 +156,15 @@ extension CallVC: RoomDelegate, LocalParticipantDelegate{
     }
     
     func roomDidConnect(room: Room) {
+        
+        //self.configureAudioSessionToEarSpeaker()
+        
         if let localParticipant = room.localParticipant {
-                print("Local identity \(localParticipant.identity)")
+            print("Local identity \(localParticipant.identity)")
 
-                // Set the delegate of the local particiant to receive callbacks
-                localParticipant.delegate = self
-            }
+            // Set the delegate of the local particiant to receive callbacks
+            localParticipant.delegate = self
+        }
         print(room.remoteParticipants.count)
         if room.remoteParticipants.count == 1{
             self.status_lbl.text = "connected"
@@ -123,11 +173,18 @@ extension CallVC: RoomDelegate, LocalParticipantDelegate{
     
     func roomDidDisconnect(room: Room, error: Error?) {
         print("disconnect error: \(error?.localizedDescription)")
+        
     }
     
     func participantDidConnect(room: Room, participant: RemoteParticipant) {
         print("joined: \(participant.identity)")
         self.status_lbl.text = "connected"
+    }
+    
+    func participantDidDisconnect(room: Room, participant: RemoteParticipant) {
+        
+        room.disconnect()
+        self.hero.dismissViewController()
     }
     
     
@@ -164,6 +221,9 @@ extension CallVC{
     func performRoomConnect(uuid: UUID, roomName: String? , completionHandler: @escaping (Bool) -> Swift.Void){
         let connectOptions = ConnectOptions(token: videoToken) { (builder) in
             builder.roomName = self.chat_id
+            
+            
+            
             
             var localAudioTrack = LocalAudioTrack()
             var localDataTrack = LocalDataTrack()
@@ -286,6 +346,21 @@ extension CallVC{
         default:
             completion(false)
             break
+        }
+    }
+    
+    
+    func configureAudioSessionToEarSpeaker(){
+
+        let audioSession:AVAudioSession = AVAudioSession.sharedInstance()
+        do { ///Audio Session: Set on Speaker
+            try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            try audioSession.setActive(true)
+
+            print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",audioSession.currentRoute.outputs)
+        }
+        catch{
+            print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
         }
     }
 }
