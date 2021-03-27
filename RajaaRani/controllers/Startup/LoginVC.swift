@@ -78,7 +78,7 @@ class LoginVC: UIViewController {
     
 }
 
-//MARK:- Globar Notifications
+//MARK:- Global Notifications
 extension LoginVC{
     //Google Sign-in notifications
     func notificationReceived(notification: Notification) {

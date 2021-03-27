@@ -141,6 +141,7 @@ extension EmailVC{
         
         playVideo()
         
+        emailTxtField.delegate = self
         
         //Keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -161,6 +162,14 @@ extension EmailVC{
         videoLayer.bringSubviewToFront(backBtn)
     }
 
+}
+
+//MARK:- Textfield Delegate
+extension EmailVC: UITextFieldDelegate{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
 }
 
 //MARK:- Helpers

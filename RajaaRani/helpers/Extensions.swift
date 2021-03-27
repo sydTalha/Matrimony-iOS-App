@@ -232,6 +232,16 @@ extension String {
     
 }
 
+//MARK:- NSMutableAttributedString
+extension NSMutableAttributedString {
+
+    func setColor(color: UIColor, forText stringValue: String) {
+       let range: NSRange = self.mutableString.range(of: stringValue, options: .caseInsensitive)
+        self.addAttribute(NSAttributedString.Key.foregroundColor, value: color, range: range)
+    }
+
+}
+
 //MARK:- UInt
 extension UInt {
     static func parse(from string: String) -> UInt? {
@@ -247,7 +257,7 @@ extension Notification.Name {
 
 //MARK:- UIImage
 extension UIImage{
-    func createSelectionIndicator(color: UIColor, size: CGSize, lineWidth: CGFloat) -> UIImage {
+    func createSelectionIndicator(color: UIColor, size: CGSize, lineWidth: CGFloat, tabBar: UITabBar) -> UIImage {
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         color.setFill()
         UIRectFill(CGRect(x: 0, y: 0, width: size.width, height: lineWidth))

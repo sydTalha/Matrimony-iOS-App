@@ -8,8 +8,12 @@
 import UIKit
 import TwilioVideo
 import CallKit
+import PushKit
 import AVFoundation
 import Hero
+import Alamofire
+import SwiftyJSON
+
 
 class CallVC: UIViewController {
 
@@ -17,9 +21,10 @@ class CallVC: UIViewController {
     var user: User?
     var chat_id: String = ""
     var audioDevice: DefaultAudioDevice = DefaultAudioDevice()
-    
-    var callKitProvider: CXProvider?
-    var callKitCallController: CXCallController?
+    var provider: CXProvider!
+    var otherUser: User?
+//    var callKitProvider: CXProvider?
+//    var callKitCallController: CXCallController?
     var videoToken: String = ""
     var room: Room?
     
@@ -40,8 +45,16 @@ class CallVC: UIViewController {
         //self.navigationController?.popViewController(animated: true)
         //self.dismiss(animated: true, completion: nil)
         
-        self.room?.disconnect()
-        self.hero.dismissViewController()
+        
+        //send end call notify
+        self.sendEndCallNotify { (success) in
+            if success{
+                self.room?.disconnect()
+                self.hero.dismissViewController()
+            }
+        }
+        
+        
     }
     
     @IBAction func speakerTapped(_ sender: UIButton) {
@@ -68,27 +81,52 @@ extension CallVC{
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        imgView.layer.cornerRadius = imgView.frame.size.width/2
+        imgView.clipsToBounds = true
         
-        //self.configureAudioSessionToEarSpeaker()
-        do { ///Audio Session: Set on Speaker
-            try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-            try AVAudioSession.sharedInstance().setActive(true)
-
-            print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",AVAudioSession.sharedInstance().currentRoute.outputs)
+        endBtn.layer.cornerRadius = endBtn.frame.size.width/2
+        endBtn.clipsToBounds = true
+        
+        self.status_lbl.text = "ringing"
+        self.username_lbl.text = self.otherUser?.nickname ?? ""
+        
+        sendCallNotify { (success) in
+            
+            
+            //self.configureAudioSessionToEarSpeaker()
+//            if AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType == AVAudioSession.Port.builtInReceiver{
+//                do{
+//                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
+//                }
+//                catch{
+//                    print(error.localizedDescription)
+//                }
+//            }
+            
+            
+            self.audioDevice = DefaultAudioDevice()
+            
+            self.audioDevice.isEnabled = true
+            
+//            do { ///Audio Session: Set on Speaker
+//                try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+//                try AVAudioSession.sharedInstance().setActive(true)
+//
+//                print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",AVAudioSession.sharedInstance().currentRoute.outputs)
+//            }
+//            catch{
+//                print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
+//            }
+            TwilioVideoSDK.audioDevice = self.audioDevice
+            
+            
+            
+            self.setupInterface()
         }
-        catch{
-            print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
-        }
-        
-        self.audioDevice = DefaultAudioDevice()
-        audioDevice.isEnabled = true
-        TwilioVideoSDK.audioDevice = audioDevice
         
         
-        
-        self.setupInterface()
         //TwilioVideoSDK.setLogLevel(.debug)
-        self.setupCallKit()
+        //self.setupCallKit()
         
         self.navigationController?.hero.navigationAnimationType = .fade
         self.navigationController?.hero.isEnabled = true
@@ -98,39 +136,51 @@ extension CallVC{
     }
     
     
+    func sendCall(){
+        
+        
+        
+        provider = CXProvider(configuration: CXProviderConfiguration())
+        provider.setDelegate(self, queue: nil)
+        
+        let controller = CXCallController()
+        let transaction = CXTransaction(action: CXStartCallAction(call: UUID(), handle: CXHandle(type: .generic, value: self.otherUser?.nickname ?? "")))
+        controller.request(transaction, completion: { error in })
+
+        DispatchQueue.main.asyncAfter(wallDeadline: DispatchWallTime.now() + 3) {
+            self.provider.reportOutgoingCall(with: controller.callObserver.calls[0].uuid, connectedAt: nil)
+        }
+    }
+    
     
 }
 
 //MARK:- Interface Setup
 extension CallVC{
     
-    func setupCallKit(){
-        let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
-        configuration.maximumCallGroups = 1
-        configuration.maximumCallsPerCallGroup = 1
-        configuration.supportsVideo = false
-        configuration.supportedHandleTypes = [.generic]
-        if let callKitIcon = UIImage(named: "iconMask80") {
-            configuration.iconTemplateImageData = callKitIcon.pngData()
-        }
-
-        callKitProvider = CXProvider(configuration: configuration)
-        callKitCallController = CXCallController()
-        
-        if let callKitProvider = callKitProvider {
-            callKitProvider.setDelegate(self, queue: nil)
-        }
-        
-        
-        
-    }
+//    func setupCallKit(){
+//        let configuration = CXProviderConfiguration(localizedName: "CallKit Quickstart")
+//        configuration.maximumCallGroups = 1
+//        configuration.maximumCallsPerCallGroup = 1
+//        configuration.supportsVideo = false
+//        configuration.supportedHandleTypes = [.generic]
+//        if let callKitIcon = UIImage(named: "iconMask80") {
+//            configuration.iconTemplateImageData = callKitIcon.pngData()
+//        }
+//
+//        callKitProvider = CXProvider(configuration: configuration)
+//        callKitCallController = CXCallController()
+//
+//        if let callKitProvider = callKitProvider {
+//            callKitProvider.setDelegate(self, queue: nil)
+//        }
+//
+//
+//
+//    }
     func setupInterface(){
         
-        imgView.layer.cornerRadius = imgView.frame.size.width/2
-        imgView.clipsToBounds = true
         
-        endBtn.layer.cornerRadius = endBtn.frame.size.width/2
-        endBtn.clipsToBounds = true
         
         TwilioManager.fetchVideoTokenFromAPI(username: self.user?._id ?? "", chat_id: chat_id) { (token) in
             if token == "" {
@@ -139,9 +189,15 @@ extension CallVC{
             else{
                 //create audio/video call room
                 self.videoToken = token
-                self.status_lbl.text = "ringing"
-                self.performStartCallAction(uuid: UUID(), roomName: self.chat_id)
                 
+                //self.performStartCallAction(uuid: UUID(), roomName: self.chat_id)
+                self.performRoomConnect(uuid: UUID(), roomName: self.chat_id) { (success) in
+                    print(success)
+                    if success{
+                        self.sendCall()
+                    }
+                
+                }
                 
             }
         }
@@ -158,6 +214,20 @@ extension CallVC: RoomDelegate, LocalParticipantDelegate{
     func roomDidConnect(room: Room) {
         
         //self.configureAudioSessionToEarSpeaker()
+        
+        self.audioDevice.block = {
+            do {
+                DefaultAudioDevice.DefaultAVAudioSessionConfigurationBlock()
+
+                let audioSession = AVAudioSession.sharedInstance()
+                try audioSession.setMode(.voiceChat)
+            } catch let error as NSError {
+                print("Fail: \(error.localizedDescription)")
+            }
+        }
+
+        self.audioDevice.block();
+        
         
         if let localParticipant = room.localParticipant {
             print("Local identity \(localParticipant.identity)")
@@ -191,30 +261,61 @@ extension CallVC: RoomDelegate, LocalParticipantDelegate{
     
 }
 
-//MARK:- CallKit Delegate
+//MARK:- PushKit Delegate
+extension CallVC: PKPushRegistryDelegate{
+    func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
+        print(pushCredentials.token.map { String(format: "%02.2hhx", $0) }.joined())
+    }
+    
+    func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
+            let config = CXProviderConfiguration(localizedName: "RajaaRani")
+            //config.iconTemplateImageData = UIImagePNGRepresentation(UIImage(named: "pizza")!)
+            //config.ringtoneSound = "ringtone.caf"
+            config.includesCallsInRecents = false;
+            config.supportsVideo = true;
+            let provider = CXProvider(configuration: config)
+            provider.setDelegate(self, queue: nil)
+            let update = CXCallUpdate()
+            update.remoteHandle = CXHandle(type: .generic, value: self.otherUser?.nickname ?? "")
+            update.hasVideo = true
+            provider.reportNewIncomingCall(with: UUID(), update: update, completion: { error in })
+        }
+    
+}
+
+//MARK:- Callkit Delegate
 extension CallVC: CXProviderDelegate{
     func providerDidReset(_ provider: CXProvider) {
         
     }
     
-    func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
-        
-        if let callKitProvider = callKitProvider{
-            callKitProvider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: nil)
-        }
-    
-        performRoomConnect(uuid: action.callUUID, roomName: action.handle.value) { (success) in
-            if (success) {
-                provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
-                action.fulfill()
-            } else {
-                action.fail()
-            }
-        }
-    }
-    
     
 }
+
+////MARK:- CallKit Delegate
+//extension CallVC: CXProviderDelegate{
+//    func providerDidReset(_ provider: CXProvider) {
+//
+//    }
+//
+//    func provider(_ provider: CXProvider, perform action: CXStartCallAction) {
+//
+//        if let callKitProvider = callKitProvider{
+//            callKitProvider.reportOutgoingCall(with: action.callUUID, startedConnectingAt: nil)
+//        }
+//
+//        performRoomConnect(uuid: action.callUUID, roomName: action.handle.value) { (success) in
+//            if (success) {
+//                provider.reportOutgoingCall(with: action.callUUID, connectedAt: Date())
+//                action.fulfill()
+//            } else {
+//                action.fail()
+//            }
+//        }
+//    }
+//
+//
+//}
 
 //MARK:- Helpers
 extension CallVC{
@@ -225,8 +326,8 @@ extension CallVC{
             
             
             
-            var localAudioTrack = LocalAudioTrack()
-            var localDataTrack = LocalDataTrack()
+            let localAudioTrack = LocalAudioTrack()
+            let localDataTrack = LocalDataTrack()
             if let audioTrack = localAudioTrack {
                 audioTrack.isEnabled = true
                 
@@ -295,32 +396,32 @@ extension CallVC{
         
     }
     
-    func performStartCallAction(uuid: UUID, roomName: String?) {
-        let callHandle = CXHandle(type: .generic, value: roomName ?? "")
-        let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
-        
-        startCallAction.isVideo = true
-        
-        let transaction = CXTransaction(action: startCallAction)
-        
-        callKitCallController?.request(transaction)  { error in
-            if let error = error {
-                
-                NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
-                return
-            }
-            self.performRoomConnect(uuid: uuid, roomName: roomName) { (success) in
-                print(success)
-                if success{
-                    
-//                    provider.reportOutgoingCall(with: startCallAction.callUUID, connectedAt: Date())
-                    startCallAction.fulfill()
-                }
-                
-            }
-            NSLog("StartCallAction transaction request successful")
-        }
-    }
+//    func performStartCallAction(uuid: UUID, roomName: String?) {
+//        let callHandle = CXHandle(type: .generic, value: roomName ?? "")
+//        let startCallAction = CXStartCallAction(call: uuid, handle: callHandle)
+//
+//        startCallAction.isVideo = true
+//
+//        let transaction = CXTransaction(action: startCallAction)
+//
+//        callKitCallController?.request(transaction)  { error in
+//            if let error = error {
+//
+//                NSLog("StartCallAction transaction request failed: \(error.localizedDescription)")
+//                return
+//            }
+//            self.performRoomConnect(uuid: uuid, roomName: roomName) { (success) in
+//                print(success)
+//                if success{
+//
+////                    provider.reportOutgoingCall(with: startCallAction.callUUID, connectedAt: Date())
+//                    startCallAction.fulfill()
+//                }
+//
+//            }
+//            NSLog("StartCallAction transaction request successful")
+//        }
+//    }
     
     
     
@@ -354,7 +455,7 @@ extension CallVC{
 
         let audioSession:AVAudioSession = AVAudioSession.sharedInstance()
         do { ///Audio Session: Set on Speaker
-            try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+            try audioSession.overrideOutputAudioPort(AVAudioSession.PortOverride.speaker)
             try audioSession.setActive(true)
 
             print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",audioSession.currentRoute.outputs)
@@ -363,4 +464,58 @@ extension CallVC{
             print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
         }
     }
+    
+    
+    func sendCallNotify(completion: @escaping (Bool)->()){
+        let params = ["userid": self.otherUser?._id ?? "", "username": self.user?.nickname ?? "", "chat_id": self.chat_id]
+        
+        AF.request(config.notifyCallURL, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (response) in
+            let responseCode = response.response?.statusCode ?? 0
+            
+            let result = JSON(response.value)
+            print(result)
+            if responseCode >= 400 && responseCode <= 499{
+                let msg = result["message"].stringValue
+                
+                DispatchQueue.main.async {
+                    //hud.dismiss()
+                    
+                    self.present(utils.displayDialog(title: "Alert", msg: msg), animated: true, completion: nil)
+                }
+                completion(false)
+            }
+            
+            else if responseCode == 200{
+                completion(true)
+            }
+            
+        }
+    }
+    
+    func sendEndCallNotify(completion: @escaping (Bool)->()){
+        let params = ["userid": self.otherUser?._id ?? ""]
+        
+        AF.request(config.notifyEndCallURL, method: .post, parameters: params, encoding: JSONEncoding.default).responseJSON { (response) in
+            let responseCode = response.response?.statusCode ?? 0
+            
+            let result = JSON(response.value)
+            print(result)
+            if responseCode >= 400 && responseCode <= 499{
+                let msg = result["message"].stringValue
+                
+                DispatchQueue.main.async {
+                    //hud.dismiss()
+                    
+                    self.present(utils.displayDialog(title: "Alert", msg: msg), animated: true, completion: nil)
+                }
+                completion(false)
+            }
+            
+            else if responseCode == 200{
+                completion(true)
+            }
+            
+        }
+    }
+    
 }

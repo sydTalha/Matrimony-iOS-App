@@ -91,6 +91,7 @@ extension NicknameVC{
         
         self.hideKeyboardWhenTappedAround()
         
+        nicknameTxtField.delegate = self
         
         //Keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -111,6 +112,15 @@ extension NicknameVC{
                 
             }
         }
+    }
+}
+
+
+//MARK:- Textfield Delegate
+extension NicknameVC: UITextFieldDelegate{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
     }
 }
 

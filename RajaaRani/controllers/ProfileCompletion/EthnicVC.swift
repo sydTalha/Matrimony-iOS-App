@@ -136,7 +136,10 @@ extension EthnicVC: UITableViewDelegate, UITableViewDataSource{
 //MARK:- TextField Delegates
 extension EthnicVC: UITextFieldDelegate{
     
-    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
 }
 
 //MARK:- Helpers

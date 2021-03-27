@@ -53,6 +53,7 @@ class HomeVC: UIViewController {
     
     @IBOutlet weak var actions_stackView: UIStackView!
     
+    @IBOutlet weak var filterBtn: UIImageView!
     
     
     
@@ -106,6 +107,21 @@ extension HomeVC{
         cardView.swipe(.left)
     }
     
+    @objc func filterTapped(tapGestureRecognizer: UITapGestureRecognizer){
+        let storyboard = UIStoryboard(name: "Dashboard", bundle: nil)
+        let contentVC = storyboard.instantiateViewController(withIdentifier: "filter_vc") as! FiltersVC
+        
+        let screenSize = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+
+        let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth, popupHeight: screenHeight)
+        popupVC.backgroundAlpha = 0.5
+        popupVC.canTapOutsideToDismiss = false
+        
+        popupVC.shadowEnabled = false
+        present(popupVC, animated: true, completion: nil)
+    }
 }
 
 
@@ -141,6 +157,10 @@ extension HomeVC{
         
     }
     
+    override func viewWillLayoutSubviews() {
+        setupTabBar()
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToLikes"{
             let destVC = segue.destination as! LikedVC
@@ -157,7 +177,7 @@ extension HomeVC{
     func setupInterface(){
         print(user?.email)
         
-        setupTabBar()
+        
         setupUIViews()
         
         print(NetworkMonitor.isConnectionAvailable)
@@ -168,11 +188,15 @@ extension HomeVC{
 //            self.present(alert, animated: true, completion: nil)
 //        }
         
-        if self.user?.isCompleted ?? false{
-            self.tabBarController?.tabBar.isUserInteractionEnabled = false
+        self.fetchCurrentUser {
+            if self.user?.isCompleted ?? false{
+                self.tabBarController?.tabBar.isUserInteractionEnabled = false
 
-            self.setupTwilioChatChannels()
+                self.setupTwilioChatChannels()
+            }
         }
+        
+        
     
         
         
@@ -189,7 +213,7 @@ extension HomeVC{
         let tabBar = self.tabBarController!.tabBar
         
         
-        tabBar.selectionIndicatorImage = UIImage().createSelectionIndicator(color: UIColor(red: 233/255, green: 169/255, blue: 57/255, alpha: 1.0), size: CGSize(width: tabBar.frame.width/CGFloat(tabBar.items!.count), height: tabBar.frame.height), lineWidth: 2.0)
+        tabBar.selectionIndicatorImage = UIImage().createSelectionIndicator(color: UIColor(red: 233/255, green: 169/255, blue: 57/255, alpha: 1.0), size: CGSize(width: tabBar.frame.width/CGFloat(tabBar.items!.count), height: tabBar.frame.height), lineWidth: 2.0, tabBar: tabBar)
         
         
         tabBar.layer.shadowOffset = CGSize(width: 4.0, height: 4.0)
@@ -340,6 +364,10 @@ extension HomeVC{
         let dislikeTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(dislikeTapped(tapGestureRecognizer:)))
             dislike_view.isUserInteractionEnabled = true
             dislike_view.addGestureRecognizer(dislikeTapGestureRecognizer)
+        
+        let filterTapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(filterTapped(tapGestureRecognizer:)))
+        filterBtn.isUserInteractionEnabled = true
+        filterBtn.addGestureRecognizer(filterTapGestureRecognizer)
     }
     
     func setupTwilioChatChannels(){
@@ -384,6 +412,11 @@ extension HomeVC{
 
 //MARK:- Twilio Chat Delegate
 extension HomeVC: TwilioChatClientDelegate{
+    
+    func chatClient(_ client: TwilioChatClient, notificationUpdatedBadgeCount badgeCount: UInt) {
+        UIApplication.shared.applicationIconBadgeNumber = Int(badgeCount)
+    }
+    
     func chatClient(_ client: TwilioChatClient, synchronizationStatusUpdated status: TCHClientSynchronizationStatus) {
         
         if status == .channelsListCompleted{
@@ -581,21 +614,34 @@ extension HomeVC: KolodaViewDataSource, KolodaViewDelegate{
     func koloda(_ koloda: KolodaView, didSelectCardAt index: Int) {
         //performSegue(withIdentifier: "goToPics", sender: self)
         
-        let storyboard : UIStoryboard = UIStoryboard(name: "Dashboard", bundle: nil)
-        let contentVC = storyboard.instantiateViewController(withIdentifier: "gallery") as! GalleryVC
+//        let storyboard : UIStoryboard = UIStoryboard(name: "Dashboard", bundle: nil)
+//        let contentVC = storyboard.instantiateViewController(withIdentifier: "gallery") as! GalleryPager
+//
+//        let screenSize = UIScreen.main.bounds
+//        let screenWidth = screenSize.width
+//        let screenHeight = screenSize.height
+//
+//        let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth - 50, popupHeight: screenHeight - 50)
+//        popupVC.backgroundAlpha = 0.5
+//        popupVC.backgroundColor = .black
+//        popupVC.canTapOutsideToDismiss = true
+//        popupVC.cornerRadius = 10
+//        popupVC.shadowEnabled = false
+//        present(popupVC, animated: true, completion: nil)
+        
+        let storyboard = UIStoryboard(name: "Dashboard", bundle: nil)
+        let contentVC = storyboard.instantiateViewController(withIdentifier: "liked") as! LikedVC
         
         let screenSize = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
-        
-        let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth - 50, popupHeight: screenHeight - 50)
+
+        let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth, popupHeight: screenHeight)
         popupVC.backgroundAlpha = 0.5
-        popupVC.backgroundColor = .black
-        popupVC.canTapOutsideToDismiss = true
-        popupVC.cornerRadius = 10
+        popupVC.canTapOutsideToDismiss = false
+        
         popupVC.shadowEnabled = false
         present(popupVC, animated: true, completion: nil)
-        
     }
     
 }
@@ -635,6 +681,31 @@ extension HomeVC: CLLocationManagerDelegate{
 //MARK:- Helpers
 extension HomeVC{
     
+    func fetchCurrentUser(completion: @escaping ()->()){
+        let params = ["email": self.user?.email ?? ""] as [String: Any]
+        
+        AF.request(config.fetchUserURL, method: .get, parameters: params, encoding: URLEncoding.default).responseJSON { (resp) in
+            let result = JSON(resp.value)
+            let responseCode = resp.response?.statusCode ?? 0
+            if responseCode >= 400 && responseCode <= 499{
+                let errorMsg = result["message"].stringValue
+                DispatchQueue.main.async {
+                    //self.hud.dismiss()
+                    self.present(utils.displayDialog(title: "Oops", msg: errorMsg), animated: true, completion: nil)
+                    completion()
+                }
+            }
+            else if responseCode == 200{
+                if result.exists(){
+                    self.user = self.parseUserObj(result: result)
+                    print("fetched user")
+                    completion()
+                }
+            }
+            
+        }
+    }
+    
     func loadProfiles(){
         self.dbUsers.removeAll()
         
@@ -665,6 +736,7 @@ extension HomeVC{
                         self.hideLikeDislikeViews()
                     }
                     else{
+                        self.dbUsers.removeAll()
                         for user in userArr{
                             let _id = user["_id"].stringValue
                             let dob = user["DOB"].stringValue
@@ -780,7 +852,19 @@ extension HomeVC{
                                             if addRes.isSuccessful(){
 
                                                 DispatchQueue.main.async {
-                                                    self.performSegue(withIdentifier: "goToLiked", sender: self)
+                                                    let storyboard = UIStoryboard(name: "Dashboard", bundle: nil)
+                                                    let contentVC = storyboard.instantiateViewController(withIdentifier: "liked") as! LikedVC
+                                                    
+                                                    let screenSize = UIScreen.main.bounds
+                                                    let screenWidth = screenSize.width
+                                                    let screenHeight = screenSize.height
+
+                                                    let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth, popupHeight: screenHeight)
+                                                    popupVC.backgroundAlpha = 0.5
+                                                    popupVC.canTapOutsideToDismiss = false
+                                                    
+                                                    popupVC.shadowEnabled = false
+                                                    self.present(popupVC, animated: true, completion: nil)
                                                 }
                                             }
                                             else{
@@ -853,17 +937,51 @@ extension HomeVC{
                 return
             }
             
-            
-            //print("early: \(self.twilioClient?.channelsList()?.subscribedChannels().count)")
-            
             if let client = chatClient{
+                
+                //notifications part
+                ChatPushNotificationState.shared.chatClient = client
+                if let updatedPushToken = ChatPushNotificationState.shared.updatedPushToken {
+                  client.register(withNotificationToken: updatedPushToken) { (result) in
+                    if (!result.isSuccessful()) {
+                        // try registration again or verify token
+                        print("error occurred while registering notification")
+                    }
+                    else{
+                        print("something: \(result)")
+                    }
+                  }
+                }
+                
+                if let receivedNotification = ChatPushNotificationState.shared.receivedNotification {
+                  client.handleNotification(receivedNotification) { (result) in
+                    if (!result.isSuccessful()) {
+                        // Handling of notification was not successful, retry?
+                        print("error occurred while handling notification")
+                    }
+                    else{
+                        print("received notifi: \(result)")
+                    }
+                  }
+                }
+                
                 self.twilioClient.client = client
+                client.user?.setFriendlyName(self.user?.nickname ?? "", completion: { (userRes) in
+                    if userRes.isSuccessful(){
+                        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+                        TwilioService.registerDevice(self.user?._id ?? "", deviceToken: appDelegate.devToken)
+                    }
+                    else{
+                        self.present(utils.displayDialog(title: "Error Setting Nickname", msg: userRes.error?.localizedDescription ?? ""), animated: true, completion: nil)
+                    }
+                })
                 if let channels = client.channelsList(){
                     self.twilioClient.channelList = channels.subscribedChannels()
                     
                     if self.twilioClient.channelList.count == 0{
                         
                         //no channels exists
+                        print("no channels")
                         self.hud.dismiss()
                         self.tabBarController?.tabBar.isUserInteractionEnabled = true
                         completion()
@@ -905,6 +1023,9 @@ extension HomeVC{
                     }
                 }
             }
+            else{
+                self.hud.dismiss()
+            }
             
         }
     }
@@ -917,6 +1038,44 @@ extension HomeVC{
         self.present(completeVC, animated: true, completion: nil)
     }
     
+    
+    func parseUserObj(result: JSON) -> User{
+        let _id = result["_id"].stringValue
+        let dob = result["DOB"].stringValue
+        let gender = result["gender"].stringValue
+        let email = result["email"].stringValue
+        let city = result["location"]["city"].stringValue
+        let country = result["location"]["country"].stringValue
+        let lat = result["location"]["coords"]["lat"].doubleValue
+        let lon = result["location"]["coords"]["lon"].doubleValue
+        let isCompleted = result["isCompleted"].boolValue
+        
+        let userDb = User(_id: _id, email: email, DOB: dob, gender: gender, nickname: "", city: city, country: country, lat: lat, lon: lon, sect: "", ethnic: "", job: "", phone: "", isCompleted: isCompleted, chatids: [], matches: [])
+        
+        if isCompleted{
+            userDb.nickname = result["nickname"].stringValue
+            userDb.sect = result["sect"].stringValue
+            userDb.ethnic = result["ethnic"].stringValue
+            userDb.job = result["job"].stringValue
+            userDb.phone = result["phone"].stringValue
+            let chatids = result["chat_ids"].arrayValue
+            var idArr = [String]()
+            for id in chatids{
+                idArr.append(id.stringValue)
+            }
+            userDb.chatids = idArr
+            if chatids.count != 0 {
+                let matchesArr = result["matches"].arrayValue
+                
+                for match in matchesArr{
+                    userDb.matches.append(match.stringValue)
+                }
+            }
+            
+        }
+        
+        return userDb
+    }
 }
 
 

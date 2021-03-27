@@ -36,6 +36,7 @@ class EmailVerifyVC: UIViewController {
     
     
     @IBAction func codeResendTapped(_ sender: UIButton) {
+        sendRegisterRequest()
         
         //performSegue(withIdentifier: "goToCompleteProfile", sender: self)
     }
@@ -125,7 +126,13 @@ extension EmailVerifyVC{
         self.hideKeyboardWhenTappedAround()
         setupOtpView()
         
-        emailTitle_lbl.text = user?.email
+        
+        
+        emailTitle_lbl.text = "Sent to \(user?.email ?? "")"
+        let stringValue = emailTitle_lbl.text
+        let attributedString: NSMutableAttributedString = NSMutableAttributedString(string: stringValue ?? "")
+        attributedString.setColor(color: UIColor.black, forText: "Sent to")
+        emailTitle_lbl.attributedText = attributedString
         
         getLocationService()
     }
@@ -268,7 +275,6 @@ extension EmailVerifyVC{
                 let result = JSON(response.value ?? "register response nil")
                 print(result)
                 hud.dismiss()
-                
             }
         }
         
@@ -338,5 +344,6 @@ extension EmailVerifyVC{
            }
         }
     }
+    
     
 }

@@ -19,7 +19,7 @@ class ProfileUnderReviewVC: UIViewController {
     //MARK:- Actions
     
     @IBAction func continueTapped(_ sender: UIButton) {
-        
+        performSegue(withIdentifier: "goToDashboard", sender: self)
         
         
     }
@@ -34,6 +34,14 @@ extension ProfileUnderReviewVC{
         super.viewDidLoad()
         self.setupInterface()
     
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "goToDashboard"{
+            let tabVC = segue.destination as! UITabBarController
+            let destVC = tabVC.children.first as! HomeVC
+            destVC.user = self.user
+        }
     }
 }
 

@@ -53,10 +53,17 @@ extension CompleteProfileVC{
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "goToNickname"{
             if from == 1{
-                let destVC = segue.destination as! NicknameVC
+                let navVC = segue.destination as! UINavigationController
+                let destVC = navVC.viewControllers.first as! NicknameVC
                 destVC.from = 1
             }
         }
+        if segue.identifier == "goToDashboard"{
+            let tabVC = segue.destination as! UITabBarController
+            let destVC = tabVC.children.first as! HomeVC
+            destVC.user = self.user
+        }
+        
     }
 }
 

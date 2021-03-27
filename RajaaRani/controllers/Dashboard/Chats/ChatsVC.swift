@@ -10,6 +10,7 @@ import Alamofire
 import SwiftyJSON
 import JGProgressHUD
 import TwilioChatClient
+import EzPopup
 
 class ChatsVC: UIViewController {
 
@@ -20,13 +21,85 @@ class ChatsVC: UIViewController {
     var chat_id: String = ""
     
     var matchedUsers = [User]()
+    var readChats = [User]()
+    var unreadChats = [User]()
+    var allChats = [User]()
     var chatids = [String]()
+    var tmpChats = [User]()
+    
     var twilioClient: TwilioClient = TwilioClient()
     //MARK:- Outlets
+    @IBOutlet weak var username_lbl: UILabel!
+    
     @IBOutlet weak var tableView: UITableView!
+    
+    @IBOutlet weak var matchedCollectionView: UICollectionView!
+    
+    @IBOutlet weak var topView: UIView!
+    
+    @IBOutlet weak var allChats_btn: UIButton!
+    
+    @IBOutlet weak var readChats_btn: UIButton!
+    
+    @IBOutlet weak var unreadChats_btn: UIButton!
     
     //MARK:- Actions
     
+    @IBAction func allChatsTapped(_ sender: UIButton) {
+        
+        //allChats_btn.layer.sublayers?.forEach { $0.removeFromSuperlayer() }
+        
+        Layer.allButtonBadge(button: allChats_btn, text: allChats_btn.titleLabel?.text ?? "")
+        
+        for layer in unreadChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+        
+        for layer in readChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+        
+    }
+    
+    @IBAction func readChatsTapped(_ sender: Any) {
+        
+        Layer.readButtonBadge(button: readChats_btn, text: readChats_btn.titleLabel?.text ?? "")
+        
+        for layer in unreadChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+        
+        for layer in allChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+    
+    }
+    
+    @IBAction func unreadChatsTapped(_ sender: UIButton) {
+        
+        Layer.unreadButtonBadge(button: unreadChats_btn, text: unreadChats_btn.titleLabel?.text ?? "")
+        
+        for layer in allChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+        
+        for layer in readChats_btn.layer.sublayers ?? [CALayer]() {
+            if(layer.name == "dot"){
+                layer.removeFromSuperlayer()
+            }
+        }
+        
+    }
     
 
 
@@ -45,6 +118,29 @@ extension ChatsVC{
 
 //MARK:- Lifecycle
 extension ChatsVC{
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        if !(user?.isCompleted ?? false){
+            let storyboard = UIStoryboard(name: "ProfileVerification", bundle: nil)
+            let contentVC = storyboard.instantiateViewController(withIdentifier: "complete_profile_vc") as! CompleteProfileVC
+            contentVC.user = self.user
+            let screenSize = UIScreen.main.bounds
+            let screenWidth = screenSize.width
+            let screenHeight = screenSize.height
+
+            let popupVC = PopupViewController(contentController: contentVC, position: .center(CGPoint.zero), popupWidth: screenWidth, popupHeight: screenHeight)
+            popupVC.backgroundAlpha = 1.0
+            popupVC.canTapOutsideToDismiss = false
+            
+            popupVC.shadowEnabled = false
+            present(popupVC, animated: true, completion: nil)
+        }
+        
+        
+        
+    }
     
     override func viewDidAppear(_ animated: Bool) {
         self.navigationController?.hero.isEnabled = false
@@ -69,7 +165,7 @@ extension ChatsVC{
         super.viewDidLoad()
         self.setupInterface()
         
-        
+        tmpChats = matchedUsers
     }
     
     
@@ -97,15 +193,21 @@ extension ChatsVC{
 extension ChatsVC{
     func setupInterface(){
         
+        topView.roundCorners([.bottomLeft, .bottomRight], radius: 30)
+        Layer.allButtonBadge(button: allChats_btn, text: (allChats_btn.titleLabel?.text)!, fontSize: 15)
+        
         
         let vc = self.tabBarController?.viewControllers![0] as! HomeVC
         self.user = vc.user
+        
+        username_lbl.text = self.user?.nickname ?? ""
         
         self.twilioClient = vc.twilioClient
         print("channel list \(twilioClient.channelList)")
         tableView.tableFooterView = UIView()
         
-
+        matchedCollectionView.delegate = self
+        matchedCollectionView.dataSource = self
         
         
     }
@@ -115,16 +217,34 @@ extension ChatsVC{
     
 }
 
+//MARK:- CollectionView Delegate and Datasource
+extension ChatsVC: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout{
+    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return self.matchedUsers.count
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "chat_cell", for: indexPath) as! MatchedChatCell
+        
+        return cell
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        return CGSize(width: 50, height: 50)
+    }
+    
+}
+
 //MARK:- TableView Delegates
 extension ChatsVC: UITableViewDelegate, UITableViewDataSource{
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return matchedUsers.count
+        return twilioClient.channelList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "chat_cell") as! ChatTableViewCell
         
-        cell.personName_lbl.text = matchedUsers[indexPath.row].nickname
+        //cell.personName_lbl.text = matchedUsers[indexPath.row].nickname
         //cell.personName_lbl.text = matchedUsers[indexPath.row]
         return cell
     }
@@ -197,6 +317,7 @@ extension ChatsVC{
                     }
                     
                     self.tableView.reloadData()
+                    self.matchedCollectionView.reloadData()
                     completion(true)
                 }
                 
@@ -233,7 +354,6 @@ extension ChatsVC{
             }
         }
     }
-    
     
     
 }

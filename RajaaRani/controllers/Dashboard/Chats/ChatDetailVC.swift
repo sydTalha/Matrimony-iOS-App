@@ -196,6 +196,7 @@ extension ChatDetailVC{
         if segue.identifier == "goToCall"{
             let destVC = segue.destination as! CallVC
             destVC.user = self.user
+            destVC.otherUser = self.otherUser
             destVC.chat_id = self.chat_id
         }
         
@@ -212,6 +213,7 @@ extension ChatDetailVC{
 extension ChatDetailVC{
     func setupInterface(){
         setupMessageVC()
+        
         
         self.currentChannel?.messages?.getLastWithCount(100, completion: { (result, items) in
             if result.isSuccessful(){

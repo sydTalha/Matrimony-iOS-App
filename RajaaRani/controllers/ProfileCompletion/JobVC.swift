@@ -88,7 +88,7 @@ extension JobVC{
         searchTxtField.addTarget(self, action: #selector(self.textFieldDidChange(_:)), for: .editingChanged)
         
         self.hideKeyboardWhenTappedAround()
-        
+        searchTxtField.delegate = self
         
         //Keyboard notifications
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -126,6 +126,14 @@ extension JobVC: UITableViewDelegate, UITableViewDataSource{
     }
     
     
+}
+
+//MARK:- Textfield Delegate
+extension JobVC: UITextFieldDelegate{
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        self.view.endEditing(true)
+        return false
+    }
 }
 
 //MARK:- Helpers
