@@ -20,6 +20,9 @@ class FiltersVC: UIViewController {
     var incomeLastSelection: IndexPath!
     var educationLastSelection: IndexPath!
     
+    var user: User?
+    var filterModel = FilterModel()
+    
     //MARK:- Outlets
     
     //converted btns
@@ -92,7 +95,7 @@ class FiltersVC: UIViewController {
             
         }, completion: nil)
         
-        
+        filterModel.converted = 1
     }
     @IBAction func convertNoTapped(_ sender: UIButton) {
         UIView.transition(with: self.convertNoBtn,
@@ -108,6 +111,8 @@ class FiltersVC: UIViewController {
             self?.convertYesBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.converted = 0
     }
     
     //MARK:- Halal Food
@@ -131,6 +136,8 @@ class FiltersVC: UIViewController {
             self?.neverHalalBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.food = 2
     }
     @IBAction func usuallyHalalTapped(_ sender: UIButton) {
         UIView.transition(with: self.usuallyHalalBtn,
@@ -152,6 +159,7 @@ class FiltersVC: UIViewController {
             self?.neverHalalBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        filterModel.food = 1
     }
     @IBAction func neverHalalTapped(_ sender: UIButton) {
         UIView.transition(with: self.neverHalalBtn,
@@ -173,6 +181,7 @@ class FiltersVC: UIViewController {
             self?.usuallyHalalBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        filterModel.food = 0
     }
     
     //MARK:- Religiousness
@@ -197,6 +206,8 @@ class FiltersVC: UIViewController {
             
         }, completion: nil)
         
+        filterModel.religiousness = 2
+        
     }
     @IBAction func somehowTapped(_ sender: UIButton) {
         UIView.transition(with: self.somehowReligiousBtn,
@@ -218,6 +229,8 @@ class FiltersVC: UIViewController {
             self?.notReligiousBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.religiousness = 1
     }
     @IBAction func notReligiousTapped(_ sender: UIButton) {
         UIView.transition(with: self.notReligiousBtn,
@@ -239,6 +252,8 @@ class FiltersVC: UIViewController {
             self?.veryReligiousBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.religiousness = 0
     }
     
     //MARK:- Marital Status
@@ -266,6 +281,9 @@ class FiltersVC: UIViewController {
             self?.widowedBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.maritalStatus = 0
+        
     }
     @IBAction func marriedBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.marriedBtn,
@@ -291,6 +309,8 @@ class FiltersVC: UIViewController {
             self?.widowedBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.maritalStatus = 1
     }
     @IBAction func divorcedBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.divorcedBtn,
@@ -316,6 +336,8 @@ class FiltersVC: UIViewController {
             self?.widowedBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.maritalStatus = 2
     }
     @IBAction func widowedBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.widowedBtn,
@@ -341,6 +363,8 @@ class FiltersVC: UIViewController {
             self?.divorcedBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.maritalStatus = 3
     }
     
     //MARK:- About To Marry
@@ -364,6 +388,8 @@ class FiltersVC: UIViewController {
             self?.nextYearBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.aboutToMarry = 2
     }
     @IBAction func thisYearBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.thisYearBtn,
@@ -385,6 +411,8 @@ class FiltersVC: UIViewController {
             self?.nextYearBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.aboutToMarry = 0
     }
     @IBAction func nextYearBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.nextYearBtn,
@@ -406,6 +434,7 @@ class FiltersVC: UIViewController {
             self?.thisYearBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        filterModel.aboutToMarry = 1
     }
     
     //MARK:- Smoking
@@ -430,6 +459,8 @@ class FiltersVC: UIViewController {
             self?.neverBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.smoking = 0
     }
     @IBAction func occasionallyBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.occasionallyBtn,
@@ -451,6 +482,8 @@ class FiltersVC: UIViewController {
             self?.neverBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.smoking = 1
     }
     @IBAction func neverBtnTapped(_ sender: UIButton) {
         UIView.transition(with: self.neverBtn,
@@ -472,6 +505,8 @@ class FiltersVC: UIViewController {
             self?.regularlyBtn.layer.borderWidth = 2
             
         }, completion: nil)
+        
+        filterModel.smoking = 2
     }
     
     
@@ -490,6 +525,7 @@ extension FiltersVC{
         incomeTableView.delegate = self
         incomeTableView.dataSource = self
         
+        filterModel.email = self.user?.email ?? ""
     }
 }
 
@@ -557,6 +593,17 @@ extension FiltersVC: UITableViewDelegate, UITableViewDataSource{
             
             tableView.cellForRow(at: indexPath)?.accessoryType = .checkmark
             self.personalAttrLastSelection = indexPath
+            
+            if dressOptions[indexPath.row] == "Modest"{
+                filterModel.personalAttr = 0
+            }
+            if dressOptions[indexPath.row] == "Hijab"{
+                filterModel.personalAttr = 1
+            }
+            if dressOptions[indexPath.row] == "Niqab"{
+                filterModel.personalAttr = 2
+            }
+            
             tableView.deselectRow(at: indexPath, animated: true)
         }
         

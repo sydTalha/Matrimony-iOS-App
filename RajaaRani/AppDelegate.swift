@@ -23,6 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
     var audioDevice: DefaultAudioDevice = DefaultAudioDevice()
     var currentUserID: String = ""
     var chat_id: String = ""
+    var otherUserName: String = ""
 
     //g-sign in: 690010998607-qfr8i70m0vh5pr9loafnf045kmq5lqtk.apps.googleusercontent.com
     
@@ -126,7 +127,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate{
         for i in 0..<deviceToken.count {
           tokenString += String(format: "%02.2hhx", arguments: [tokenChars[i]])
         }
-        devToken = tokenString
+        //devToken = tokenString
         
     }
     
@@ -141,68 +142,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate{
     //received remote notification
     func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         print("received notifiii: \(userInfo)")
-        
-        
-        let result = JSON(userInfo)
-        if result["type"].exists(){
-            let name = result["name"].stringValue
-            let type = result["type"].stringValue
-            self.currentUserID = result["current_user_id"].stringValue
-            self.chat_id = result["chat_id"].stringValue
-            print(result)
-            
-            
-            let config = CXProviderConfiguration(localizedName: "RajaaRani")
-            config.includesCallsInRecents = false
-            config.supportsVideo = false
-            let provider = CXProvider(configuration: config)
-            provider.setDelegate(self, queue: nil)
-            let update = CXCallUpdate()
-            update.remoteHandle = CXHandle(type: .generic, value: name)
-            update.hasVideo = false
-            
-            
-            if type == "call"{
-                
-                //config.iconTemplateImageData = UIImagePNGRepresentation(UIImage(named: "pizza")!)
-                //config.ringtoneSound = "ringtone.caf"
-                
-                self.currentCallUUID = UUID()
-                print(currentCallUUID!)
-                provider.reportNewIncomingCall(with: currentCallUUID!, update: update, completion: { error in })
-                
-                completionHandler(.newData)
-                
-            }
-            if type == "decline"{
-                if currentCallUUID != nil{
-                    let cxCallController = CXCallController()
-                    print(currentCallUUID!)
-                    let endCallAction = CXEndCallAction(call: currentCallUUID!)
-                        let transaction = CXTransaction(action: endCallAction)
-                        cxCallController.request(transaction) { error in
-                            if let error = error {
-                                print("EndCallAction transaction request failed: \(error.localizedDescription).")
-                                provider.reportCall(with: self.currentCallUUID!, endedAt: Date(), reason: .remoteEnded)
-                                return
-                            }
-
-                            print("EndCallAction transaction request successful")
-
-                        }
-                }
-                
-            }
-            
-        }
-        
-        
-        
-        else{
-            //completionHandler(.noData)
-        }
-        
-        
+       
         
     }
 
@@ -249,12 +189,55 @@ extension AppDelegate: PKPushRegistryDelegate{
         print(credentials.token)
         let deviceToken = credentials.token.map { String(format: "%02x", $0) }.joined()
         print("pushRegistry -> deviceToken :\(deviceToken)")
-        //self.devToken = deviceToken
+        self.devToken = deviceToken
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
         
-        print("received \(payload.dictionaryPayload)")
+        print("received notifiiiii \(payload.dictionaryPayload)")
+        
+        let result = JSON(payload.dictionaryPayload)
+        
+        if result["type"].exists(){
+            let name = result["name"].stringValue
+            let type = result["type"].stringValue
+            self.otherUserName = name
+            
+            let config = CXProviderConfiguration(localizedName: "RajaaRani")
+            config.includesCallsInRecents = false
+            config.supportsVideo = false
+            let provider = CXProvider(configuration: config)
+            provider.setDelegate(self, queue: nil)
+            let update = CXCallUpdate()
+            update.remoteHandle = CXHandle(type: .generic, value: name)
+            update.hasVideo = false
+            
+            if type == "call"{
+                self.currentUserID = result["current_user_id"].stringValue
+                self.chat_id = result["chat_id"].stringValue
+                print(result)
+                
+                self.currentCallUUID = UUID()
+                print(currentCallUUID!)
+                provider.reportNewIncomingCall(with: currentCallUUID!, update: update, completion: { error in })
+            }
+            if type == "decline"{
+                if currentCallUUID != nil{
+                    let cxCallController = CXCallController()
+                    print(currentCallUUID!)
+                    let endCallAction = CXEndCallAction(call: currentCallUUID!)
+                    let transaction = CXTransaction(action: endCallAction)
+                    cxCallController.request(transaction) { error in
+                        if let error = error {
+                            print("EndCallAction transaction request failed: \(error.localizedDescription).")
+                            provider.reportCall(with: self.currentCallUUID!, endedAt: Date(), reason: .remoteEnded)
+                            return
+                        }
+                        print("EndCallAction transaction request successful")
+                    }
+                }
+            }
+        }
         
     }
     
@@ -272,7 +255,41 @@ extension AppDelegate: CXProviderDelegate{
     func provider(_ provider: CXProvider, perform action: CXAnswerCallAction) {
         connectVoiceCall(user_id: currentUserID, chat_id: chat_id) { (success) in
             if success{
-                action.fulfill()
+                print("connected voice")
+                let state = UIApplication.shared.applicationState
+                if state == .background || state == .inactive {
+                    // background
+                    action.fulfill()
+                } else if state == .active {
+                    // foreground
+                    
+                    if let controller = UIStoryboard(name: "Dashboard", bundle: nil).instantiateViewController(withIdentifier: "callvc") as? CallVC {
+                        controller.otherUserNickname = self.otherUserName
+                        controller.state = .active
+                        controller.definesPresentationContext = true
+                        controller.modalPresentationStyle = .overCurrentContext
+                        if let window = self.window, let rootViewController = window.rootViewController
+                        {
+                            var currentController = rootViewController
+                            while let presentedController = currentController.presentedViewController {
+                                currentController = presentedController
+
+                            }
+
+                            currentController.present(controller, animated: true, completion: nil)
+                        }
+                    
+                        
+                    }
+                    
+                    
+                    
+                    action.fulfill()
+                    
+                }
+                
+                
+                
             }
             else{
                 print("call failed to connect")
@@ -284,7 +301,6 @@ extension AppDelegate: CXProviderDelegate{
         
     }
     func provider(_ provider: CXProvider, perform action: CXEndCallAction) {
-        
         
         action.fulfill(withDateEnded: Date())
     }
@@ -312,7 +328,7 @@ extension AppDelegate: RoomDelegate, LocalParticipantDelegate{
             }
         }
 
-        self.audioDevice.block();
+        self.audioDevice.block()
         
         
         if let localParticipant = room.localParticipant {
@@ -365,8 +381,6 @@ extension AppDelegate{
             else{
                 //create audio/video call room
                 
-                
-                
                 self.performRoomConnect(uuid: UUID(), token: token, roomName: chat_id) { (success) in
                     print(success)
                     if success{
@@ -418,6 +432,13 @@ extension AppDelegate{
         }
         
         self.room = TwilioVideoSDK.connect(options: connectOptions, delegate: self)
+        if room != nil{
+            completionHandler(true)
+        }
+        else{
+            completionHandler(false)
+        }
+        
     }
     
 }

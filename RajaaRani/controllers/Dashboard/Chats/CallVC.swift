@@ -15,6 +15,11 @@ import Alamofire
 import SwiftyJSON
 
 
+
+enum CallState {
+    case inactive
+    case active
+}
 class CallVC: UIViewController {
 
     //MARK:- Properties
@@ -23,10 +28,14 @@ class CallVC: UIViewController {
     var audioDevice: DefaultAudioDevice = DefaultAudioDevice()
     var provider: CXProvider!
     var otherUser: User?
+    var otherUserNickname: String = ""
 //    var callKitProvider: CXProvider?
 //    var callKitCallController: CXCallController?
     var videoToken: String = ""
     var room: Room?
+    
+    var state: CallState?
+    
     
     
     //MARK:- Outlets
@@ -47,12 +56,18 @@ class CallVC: UIViewController {
         
         
         //send end call notify
-        self.sendEndCallNotify { (success) in
-            if success{
-                self.room?.disconnect()
-                self.hero.dismissViewController()
+        if state == .inactive{
+            self.sendEndCallNotify { (success) in
+                if success{
+                    self.room?.disconnect()
+                    self.hero.dismissViewController()
+                }
             }
         }
+        else {
+            self.dismiss(animated: true, completion: nil)
+        }
+        
         
         
     }
@@ -88,12 +103,46 @@ extension CallVC{
         endBtn.clipsToBounds = true
         
         self.status_lbl.text = "ringing"
-        self.username_lbl.text = self.otherUser?.nickname ?? ""
         
-        sendCallNotify { (success) in
+        
+        
+        if state == .active{
+            self.username_lbl.text = self.otherUserNickname
+            self.status_lbl.text = "Connected"
+        }
+        else if state == .inactive{
+            self.username_lbl.text = self.otherUser?.nickname ?? ""
+            sendCallNotify { (success) in
+                
+                
+
+                
+                
+                self.audioDevice = DefaultAudioDevice()
+                
+                self.audioDevice.isEnabled = true
+                
+    //            do { ///Audio Session: Set on Speaker
+    //                try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
+    //                try AVAudioSession.sharedInstance().setActive(true)
+    //
+    //                print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",AVAudioSession.sharedInstance().currentRoute.outputs)
+    //            }
+    //            catch{
+    //                print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
+    //            }
+                TwilioVideoSDK.audioDevice = self.audioDevice
+                
+                
+                
+                self.setupInterface()
+            }
             
             
-            //self.configureAudioSessionToEarSpeaker()
+            //TwilioVideoSDK.setLogLevel(.debug)
+            //self.setupCallKit()
+        }
+        //self.configureAudioSessionToEarSpeaker()
 //            if AVAudioSession.sharedInstance().currentRoute.outputs.first?.portType == AVAudioSession.Port.builtInReceiver{
 //                do{
 //                    try AVAudioSession.sharedInstance().overrideOutputAudioPort(.speaker)
@@ -102,31 +151,7 @@ extension CallVC{
 //                    print(error.localizedDescription)
 //                }
 //            }
-            
-            
-            self.audioDevice = DefaultAudioDevice()
-            
-            self.audioDevice.isEnabled = true
-            
-//            do { ///Audio Session: Set on Speaker
-//                try AVAudioSession.sharedInstance().overrideOutputAudioPort(AVAudioSession.PortOverride.none)
-//                try AVAudioSession.sharedInstance().setActive(true)
-//
-//                print("Successfully configured audio session (EAR-Speaker).", "\nCurrent audio route: ",AVAudioSession.sharedInstance().currentRoute.outputs)
-//            }
-//            catch{
-//                print("#configureAudioSessionToEarSpeaker Error \(error.localizedDescription)")
-//            }
-            TwilioVideoSDK.audioDevice = self.audioDevice
-            
-            
-            
-            self.setupInterface()
-        }
         
-        
-        //TwilioVideoSDK.setLogLevel(.debug)
-        //self.setupCallKit()
         
         self.navigationController?.hero.navigationAnimationType = .fade
         self.navigationController?.hero.isEnabled = true
@@ -429,15 +454,15 @@ extension CallVC{
         let permissionStatus: AVAudioSession.RecordPermission = AVAudioSession.sharedInstance().recordPermission
 
         switch permissionStatus {
-        case AVAudioSessionRecordPermission.granted:
+        case AVAudioSession.RecordPermission.granted:
             // Record permission already granted.
             completion(true)
             break
-        case AVAudioSessionRecordPermission.denied:
+        case AVAudioSession.RecordPermission.denied:
             // Record permission denied.
             completion(false)
             break
-        case AVAudioSessionRecordPermission.undetermined:
+        case AVAudioSession.RecordPermission.undetermined:
             // Requesting record permission.
             // Optional: pop up app dialog to let the users know if they want to request.
             AVAudioSession.sharedInstance().requestRecordPermission({ (granted) in

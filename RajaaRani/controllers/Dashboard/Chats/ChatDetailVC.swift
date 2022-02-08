@@ -198,6 +198,7 @@ extension ChatDetailVC{
             destVC.user = self.user
             destVC.otherUser = self.otherUser
             destVC.chat_id = self.chat_id
+            destVC.state = .inactive
         }
         
         if segue.identifier == "goToVideo"{
